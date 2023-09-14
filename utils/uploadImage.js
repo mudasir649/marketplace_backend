@@ -12,6 +12,24 @@ cloudinary.config({
     secure: true
 });
 
+const uploadSingleImage = async (files) => {
+  const imageBuffer = files.data;
+  const uploadOptions = {
+    resource_type: 'image',
+  };
+
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result.url);
+      }
+    }).end(imageBuffer);
+  })
+
+}
+
 
 const uploadMultipleImage =  async (files) => {
     const uploadPromises = files.map(file => {
@@ -41,4 +59,7 @@ const uploadMultipleImage =  async (files) => {
     }
 }
 
-export default uploadMultipleImage;
+export {
+  uploadMultipleImage,
+  uploadSingleImage
+};
