@@ -6,7 +6,8 @@ import cookieParser from 'cookie-parser';
 import authRoutes from "./routes/authRoutes.js";
 import fileUpload from 'express-fileupload';
 import dbConnection from './utils/dbConnection.js'
-import adRoutes from './routes/adRoutes.js'
+import adRoutes from './routes/adRoutes.js';
+import googleRoutes from './routes/gogoleRoutes.js';
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use(async (req, res, next) => {
     next();
 });
 
-
+app.use('/googleRoutes', googleRoutes)
 app.use('/auth', authRoutes);
 app.use('/ad', adRoutes)
 

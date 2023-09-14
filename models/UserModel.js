@@ -1,6 +1,7 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
-const UserSchema = {
+const UserSchema = new mongoose.Schema({
+    adIds:[{ type:'ObjectId', ref:"Ad" }],
     image: {
         type: String,
         default: null
@@ -37,7 +38,7 @@ const UserSchema = {
         type: String,
         default: null
     }
-};
+}, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
 export default User;

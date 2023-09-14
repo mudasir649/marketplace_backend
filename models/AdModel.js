@@ -118,7 +118,7 @@ const AdSchema = new mongoose.Schema({
         type: Number,
         default:0
     }
-});
+}, { timestamps: true });
 
 const Ad = mongoose.model('Ad', AdSchema);
 
