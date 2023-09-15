@@ -16,7 +16,7 @@ const fetchTopAds = async(req, res) => {
 const fetchAllAds = async (req, res) => {
     try {
         const skip = (req.query.page - 1) * 10;
-        const ad = await Ad.find().sort({createdAt: 1});
+        const ad = await Ad.find().sort({createdAt: 1}).skip(skip).limit(10);
         const totalAds = await Ad.find().count();
         return successResponse(res, 201, 'All ads are sent.', true, {ad, totalAds});
     } catch (error) {

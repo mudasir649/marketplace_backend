@@ -81,7 +81,7 @@ const getUserAds = async(req, res) => {
 }
 
 const updateProfile = async(req, res) => {
-  const { firstName, lastName, email, phoneNo, website, viber, whatsapp, password } = req.body;
+  const { firstName, lastName, phoneNo, website, viber, whatsapp } = req.body;
   const userId = req.params.id;
   console.log(userId);
   try {
