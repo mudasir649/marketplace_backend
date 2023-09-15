@@ -2,7 +2,7 @@ import Ad from '../models/AdModel.js';
 import FavoriteAd from '../models/FavoriteAdModel.js';
 import User from '../models/UserModel.js';
 import { successResponse, failedResponse } from '../utils/response.js';
-import { uploadMultipleImage } from '../utils/uploadImage.js'
+import { uploadMultipleImage, uploadSingleImage } from '../utils/uploadImage.js'
 
 const fetchTopAds = async(req, res) => {
     try {
@@ -34,31 +34,33 @@ const fetchFeaturedAds = async (req, res) => {
 }
 
 const createAd = async (req, res) => {
+    const { file } = req.files;
+    
     try {
-        if(Object.keys(req.query).length === 0){
-            const data = req.body
-            const imageData = await uploadMultipleImage(req.files.file);
+        if(file.length > 1){
+            const data = req.body;
+            const imageData = await uploadMultipleImage(file);
             data.image = imageData;
             const ad = await Ad.create(data);
             const user = await User.findByIdAndUpdate({ _id:data.userId }, { $push: {adIds: ad?._id} }, { new: true });
             if(ad){
-            return successResponse(res, 201, 'Ad is posted successfully.', true, ad)
+                return successResponse(res, 201, 'Ad is posted successfully.', true, ad)
             }else{
-                return failedResponse(res, 500, 'something went wrong', false);
+                return failedResponse(res, 500, 'ad post with single file failed', false);
             }
         }else{
-            const data = JSON.parse(req.body.data);
-            const imageData = await uploadMultipleImage(req.files.file);
+            const data = req.body;
+            const imageData = await uploadSingleImage(file);
             data.image = imageData;
             const ad = await Ad.create(data);
-            const user = await User.findById({ _id:data.userId }, { adIds: ad?._id });
+            const user = await User.findByIdAndUpdate({ _id:data.userId }, { $push: {adIds: ad?._id} }, { new: true });
             console.log(user);
             if(ad){
                 return successResponse(res, 201, 'Ad is posted successfully.', true, ad)
             }else{
-                return failedResponse(res, 500, 'something went wrong', false);
-            }
-        }
+                return failedResponse(res, 500, 'ad post with multiple file failed', false);
+            }        }
+        
     } catch (error) {
         return failedResponse(res, 500, 'something went wrong', false);
     }
