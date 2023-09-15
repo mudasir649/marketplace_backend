@@ -18,7 +18,7 @@ const login = async(req, res) => {
         image: user?.image,
         email: user?.email,
         username: user?.userName,
-        firstname: user?.firstname,
+        firstName: user?.firstName,
         lastName: user?.lastName
       }
       return successResponse(res, 200, 'You are loggedin.', true, {token, userDetails});
@@ -28,7 +28,7 @@ const login = async(req, res) => {
 }
 
 const register = async(req, res) => {
-    const { email, userName, password } = req.body;
+    const { firstName, lastName, email, userName, password } = req.body;
     const existingUser = await User.findOne({email});
     if(existingUser?.email){
         return failedResponse(res, 400, 'Alert! email already exists please enter someother email.', false);
@@ -41,16 +41,16 @@ const register = async(req, res) => {
 
         const hash = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, hash);
-        const user = await User.create({email, userName, password: encryptedPassword});
+        const user = await User.create({firstName, lastName, email, userName, password: encryptedPassword});
         if(user){
             const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
             const userDetails = {
                 id: user?._id,
                 image: user?.image,
-                email: user?.email,
+                email: user?.email,      
                 username: user?.userName,
-                firstname: user?.firstname,
-                lastName: user?.lastName
+                firstName: user?.firstName,
+                lastName: user?.lastName,
               }
     
             return successResponse(res, 201, 'user created successfully.', true, { token, userDetails}); 
@@ -81,9 +81,8 @@ const getUserAds = async(req, res) => {
 }
 
 const updateProfile = async(req, res) => {
-  const { firstName, lastName, email, phoneNo, website, viber, whatsapp, password } = req.body;
+  const { firstName, lastName, phoneNo, website, viber, whatsapp } = req.body;
   const userId = req.params.id;
-  console.log(userId);
   try {
     if(!req.files){
       const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName, phoneNo, website, viber, whatsapp }, { new: true });
@@ -94,7 +93,16 @@ const updateProfile = async(req, res) => {
       const image = await uploadSingleImage(req.files.file);
       const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName, phoneNo, website, viber, whatsapp }, { new: true });
       if(user){
-        return successResponse(res, 200, 'user profile updated successfully', true, user);
+        const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
+        const userDetails = {
+          id: user?._id,
+          image: user?.image,
+          email: user?.email,      
+          username: user?.userName,
+          firstName: user?.firstName,
+          lastName: user?.lastName,
+        }
+        return successResponse(res, 200, 'user profile updated successfully', true, { token, userDetails });
       }   
     }
   } catch (error) {
