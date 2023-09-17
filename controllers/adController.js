@@ -16,7 +16,7 @@ const fetchTopAds = async(req, res) => {
 const fetchAllAds = async (req, res) => {
     try {
         const skip = (req.query.page - 1) * 10;
-        const ad = await Ad.find().sort({createdAt: 1}).skip(skip).limit(10);
+        const ad = await Ad.find().sort({createdAt: -1}).skip(skip).limit(10);
         const totalAds = await Ad.find().count();
         return successResponse(res, 201, 'All ads are sent.', true, {ad, totalAds});
     } catch (error) {
@@ -89,14 +89,52 @@ const deleteAd = async(req, res) => {
     }
 }
 
+const filterSearch = async(req, res) => {
+    const { address, category, subcategory, model }= req.body;
+    try {
+        if(address && category && model){
+            const ad = await Ad.find({ address: address, category: category, model: model });
+            return successResponse(res, 200, 'All records are sent.', true, ad);
+        }
+        if(address && category && subcategory && model){
+            const ad = await Ad.find({ address: address, category: category, subCategory: subcategory, model: model });
+            return successResponse(res, 200, 'All records are sent.', true, ad);
+        }
+        if(address && category && subcategory){
+            const ad = await Ad.find({ address: address, category: category, subCategory: subcategory });
+            return successResponse(res, 200, 'All records are sent.', true, ad);
+        }
+        if(address && category){
+            const ad = await Ad.find({ address: address, category: category });
+            return successResponse(res, 200, 'All records are sent.', true, ad);
+        }
+        if(category){
+            const ad = await Ad.find({ category: category });
+            return successResponse(res, 200, 'All records are sent.', true, ad);
+        }
+        if(address){
+            const ad = await Ad.find({ address: address });
+            return successResponse(res, 200, 'All records are sent.', true, ad);
+        }else{
+            return successResponse(res, 200, 'No record found.', true)
+        }
+    } catch (error) {
+        return failedResponse(res, 500, 'Unable to search record.', false);
+    }
+}
 
-// const addToFavorite = async(req, res) => {
-//     try {
-//         const favorite = await FavoriteAd.findOneAndUpdate({})
-//     } catch (error) {
-        
-//     }
-// }
+
+const addToFavorite = async(req, res) => {
+     const data = req.body;
+    try {
+        const favorite = await FavoriteAd.create(req.body);
+        const user = await User.findByIdAndUpdate({ _id: data?.userId }, {$push: { favAdIds: favorite?._id }},  { new: true });
+        console.log(user);
+        return successResponse(res, 201, 'ad is marked favorite.', true);
+    } catch (error) {
+        return successResponse(res, 201, 'Unable to mark ad favorite.', false);
+    }
+}
 
 
 export {
@@ -107,4 +145,6 @@ export {
     addView,
     getSpecificAd,
     deleteAd,
+    addToFavorite,
+    filterSearch,
 }
