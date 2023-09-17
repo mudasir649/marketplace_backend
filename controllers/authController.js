@@ -3,6 +3,7 @@ import { failedResponse, successResponse } from "../utils/response.js";
 import generateToken from "../utils/generateJWT.js";
 import bcrypt from "bcrypt";
 import { uploadSingleImage } from '../utils/uploadImage.js';
+import Ad from "../models/AdModel.js";
 
 const login = async(req, res) => {
     const { email, password } = req.body;
@@ -61,6 +62,7 @@ const register = async(req, res) => {
 }
 
 const logout = (req, res) => {
+  
         const rs = res.clearCookie('jwt');
         return successResponse(
             res,
@@ -77,6 +79,22 @@ const getUserAds = async(req, res) => {
     return successResponse(res, 200, 'All user ads are sent.', true, ads)
   } catch (error) {
     return failedResponse(res, 500, 'unable to get ads', false);
+  }
+}
+
+const getFavroiteAds = async(req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id }).select('favAdIds');
+    const favAds = await user.populate('favAdIds');
+    let allFavAds = favAds?.favAdIds;
+    const favAdsArr = [];
+    for (let i = 0; i < allFavAds.length; i++) {
+      const ads = await Ad.findById({_id: allFavAds[i].adId });
+      favAdsArr.push(ads)
+    }
+    return successResponse(res, 200, 'favorite ads of user is sent successfully.', true, favAdsArr);
+  } catch (error) {
+    return failedResponse(res, 500, 'unable to get favorite ads', false);
   }
 }
 
@@ -116,4 +134,5 @@ export {
     logout,
     updateProfile,
     getUserAds,
+    getFavroiteAds
 }

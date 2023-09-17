@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
     adIds:[{ type:'ObjectId', ref:"Ad" }],
+    favAdIds:[{ type:'ObjectId', ref:"FavoriteAd" }],
     image: {
         type: String,
         default: null
