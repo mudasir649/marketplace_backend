@@ -33,7 +33,7 @@ app.use('/googleRoutes', googleRoutes)
 app.use('/auth', authRoutes);
 app.use('/ad', adRoutes)
 
-const PORT = process.env.BACK_END_PORT || 4000;
+const PORT = process.env.BACK_END_PORT || 8080;
 
 app.listen(PORT,() => {
     console.log(`App running on port ${PORT}`);
