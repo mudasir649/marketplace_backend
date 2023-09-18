@@ -68,8 +68,9 @@ const createAd = async (req, res) => {
 
 const getSpecificAd = async(req, res) => {
     try {
-        const record = await Ad.findById({ _id: req.params.id });
-        return successResponse(res, 200, 'specific record sent.', true, record);
+        const getUserAd = await Ad.findById({ _id: req.params.id });
+        const getRecord = await getUserAd.populate('userId');
+        return successResponse(res, 200, 'specific record sent.', true, getRecord);
     } catch (error) {
         return failedResponse(res, 500, 'unable to get record.', false)
     }
