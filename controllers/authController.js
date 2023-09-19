@@ -17,10 +17,11 @@ const login = async(req, res) => {
       const userDetails = {
         id: user?._id,
         image: user?.image,
-        email: user?.email,
+        email: user?.email,      
         username: user?.userName,
         firstName: user?.firstName,
-        lastName: user?.lastName
+        lastName: user?.lastName,
+        phoneNo: user?.phoneNo
       }
       return successResponse(res, 200, 'You are loggedin.', true, {token, userDetails});
     } else {
@@ -46,14 +47,14 @@ const register = async(req, res) => {
         if(user){
             const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
             const userDetails = {
-                id: user?._id,
-                image: user?.image,
-                email: user?.email,      
-                username: user?.userName,
-                firstName: user?.firstName,
-                lastName: user?.lastName,
-              }
-    
+              id: user?._id,
+              image: user?.image,
+              email: user?.email,      
+              username: user?.userName,
+              firstName: user?.firstName,
+              lastName: user?.lastName,
+              phoneNo: user?.phoneNo
+            }
             return successResponse(res, 201, 'user created successfully.', true, { token, userDetails}); 
         }
     } catch (error) {
@@ -119,6 +120,7 @@ const updateProfile = async(req, res) => {
           username: user?.userName,
           firstName: user?.firstName,
           lastName: user?.lastName,
+          phoneNo: user?.phoneNo
         }
         return successResponse(res, 200, 'user profile updated successfully', true, { token, userDetails });
       }   

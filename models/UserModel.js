@@ -27,18 +27,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         minSelect:8
     },
-    whatsapp: {
+    phoneNumber: {
         type: Number,
         default: null
     },
-    viber: {
-        type: Number,
-        default: null
-    },
-    website: {
-        type: String,
-        default: null
-    }
 }, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
