@@ -40,7 +40,7 @@ const createAd = async (req, res) => {
         if(file.length > 1){
             const data = req.body;
             const imageData = await uploadMultipleImage(file);
-            data.image = imageData;
+            data.images = imageData;
             const ad = await Ad.create(data);
             const user = await User.findByIdAndUpdate({ _id:data.userId }, { $push: {adIds: ad?._id} }, { new: true });
             if(ad){
@@ -51,7 +51,7 @@ const createAd = async (req, res) => {
         }else{
             const data = req.body;
             const imageData = await uploadSingleImage(file);
-            data.image = imageData;
+            data.images = imageData;
             const ad = await Ad.create(data);
             const user = await User.findByIdAndUpdate({ _id:data.userId }, { $push: {adIds: ad?._id} }, { new: true });
             console.log(user);
@@ -70,7 +70,7 @@ const getSpecificAd = async(req, res) => {
     try {
         const getUserAd = await Ad.findById({ _id: req.params.id });
         const getRecord = await getUserAd.populate('userId');
-        return successResponse(res, 200, 'specific record sent.', true, getRecord);
+        return successResponse(res, 200, 'specific record sent.', true, getRecord.toJSON());
     } catch (error) {
         return failedResponse(res, 500, 'unable to get record.', false)
     }
@@ -96,24 +96,19 @@ const filterSearch = async(req, res) => {
         if(address && category && model){
             const ad = await Ad.find({ address: address, category: category, model: model });
             return successResponse(res, 200, 'All records are sent.', true, ad);
-        }
-        if(address && category && subcategory && model){
+        }else if(address && category && subcategory && model){
             const ad = await Ad.find({ address: address, category: category, subCategory: subcategory, model: model });
             return successResponse(res, 200, 'All records are sent.', true, ad);
-        }
-        if(address && category && subcategory){
+        }else if(address && category && subcategory){
             const ad = await Ad.find({ address: address, category: category, subCategory: subcategory });
             return successResponse(res, 200, 'All records are sent.', true, ad);
-        }
-        if(address && category){
+        }else if(address && category){
             const ad = await Ad.find({ address: address, category: category });
             return successResponse(res, 200, 'All records are sent.', true, ad);
-        }
-        if(category){
+        }else if(category){
             const ad = await Ad.find({ category: category });
             return successResponse(res, 200, 'All records are sent.', true, ad);
-        }
-        if(address){
+        }else if(address){
             const ad = await Ad.find({ address: address });
             return successResponse(res, 200, 'All records are sent.', true, ad);
         }else{
@@ -136,6 +131,7 @@ const addToFavorite = async(req, res) => {
         return successResponse(res, 201, 'Unable to mark ad favorite.', false);
     }
 }
+
 
 
 export {

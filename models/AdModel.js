@@ -4,7 +4,7 @@ const AdSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    image: [
+    images: [
         {
             type: String,
             default: null
@@ -42,15 +42,7 @@ const AdSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    email: {
-        type: String,
-        default: null
-    },
-    phoneNumber: {
-        type: Number,
-        default: null
-    },
-    whatsApp: {
+    whatsapp: {
         type: Number,
         default: null
     },
@@ -59,18 +51,10 @@ const AdSchema = new mongoose.Schema({
         default: null
     },
     website: {
-    type: String,
-    default: null
+        type: String,
+        default: null
     },
     address: {
-        type: String,
-        default: null
-    },
-    feature_list: {
-        type: String,
-        default: null
-    },
-    howToContact: {
         type: String,
         default: null
     },
@@ -106,17 +90,23 @@ const AdSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    cylinders: {
+    cylinder: {
         type: String,
         default: null
     },
-    kiloMeters: {
+    km: {
         type: Number,
         default: null
     },
     views: {
         type: Number,
         default:0
+    },
+    latitude: {
+        type: Number
+    },
+    longitude: {
+        type: Number
     }
 }, { timestamps: true });
 
