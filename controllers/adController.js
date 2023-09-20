@@ -151,12 +151,12 @@ const motorcycles = async(req, res) => {
 }
 
 const findCars = async(req, res) => {
-    const cars = await Cars.find().select('make');
+    const cars = await Cars.find().select('make').sort('make');
     return successResponse(res, 201, 'car is created.', true, cars );
 }
 
 const findCarModels = async(req, res) => {
-    const cars = await Cars.find({make: req.params.model}).select('model');
+    const cars = await Cars.find({make: req.params.model}).select('model').sort('model');
     return successResponse(res, 201, 'car is created.', true, cars );
 }
 

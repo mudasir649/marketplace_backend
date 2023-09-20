@@ -100,17 +100,17 @@ const getFavroiteAds = async(req, res) => {
 }
 
 const updateProfile = async(req, res) => {
-  const { firstName, lastName, phoneNo, website, viber, whatsapp } = req.body;
+  const { firstName, lastName, phoneNumber, website, viber, whatsapp } = req.body;
   const userId = req.params.id;
   try {
     if(!req.files){
-      const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName, phoneNo, website, viber, whatsapp }, { new: true });
+      const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName, phoneNumber, website, viber, whatsapp }, { new: true });
       if(user){
         return successResponse(res, 200, 'user profile updated successfully', true, user);
       }
     }else{
       const image = await uploadSingleImage(req.files.file);
-      const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName, phoneNo, website, viber, whatsapp }, { new: true });
+      const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName, phoneNumber, website, viber, whatsapp }, { new: true });
       if(user){
         const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
         const userDetails = {
