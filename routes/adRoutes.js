@@ -1,6 +1,6 @@
 import epxress from "express";
 import { createAd, fetchAllAds, fetchFeaturedAds, fetchTopAds, addView, getSpecificAd, 
-        deleteAd, addToFavorite, filterSearch, car, findCars, findCarModels, eScotter, eBikes, bicycles, motorcycles, BikesSubCategory } from "../controllers/adController.js";
+        deleteAd, addToFavorite, filterSearch, car, findCars, findCarModels, motorcycles, BikesSubCategory } from "../controllers/adController.js";
 
 const router = epxress.Router();
 

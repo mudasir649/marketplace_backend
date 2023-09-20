@@ -11,5 +11,5 @@ const BikesSubcategorySchema = new mongoose.Schema({
 ]
 });
 
-const BikesSubcategory = mongoose.model('BikesSubcategory');
+const BikesSubcategory = mongoose.model('BikesSubcategory', BikesSubcategorySchema);
 export default BikesSubcategory;
