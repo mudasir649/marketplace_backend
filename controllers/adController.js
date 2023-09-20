@@ -152,12 +152,46 @@ const motorcycles = async(req, res) => {
 
 const findCars = async(req, res) => {
     const cars = await Cars.find().select('make').sort('make');
-    return successResponse(res, 201, 'car is created.', true, cars );
+    return successResponse(res, 200, 'car is created.', true, cars );
 }
 
 const findCarModels = async(req, res) => {
     const cars = await Cars.find({make: req.params.model}).select('model').sort('model');
-    return successResponse(res, 201, 'car is created.', true, cars );
+    return successResponse(res, 200, 'car is created.', true, cars );
+}
+
+const findMotorcycle = async(req, res) => {
+    const motorcycle = await Motorcycles.find().select('make').sort('model');
+    return successResponse(res, 200, 'motorcycle make is sent.', true, motorcycle );
+}
+
+const findMotorcycleModel = async(req, res) => {
+    const motorcycle = await Motorcycles.find({ make: req.params.model }).select('model').sort('model');
+    return successResponse(res, 200, 'motorcycle model is sent.', true, motorcycle );
+}
+
+const findBikeSubcategory = async(req, res) => {
+    const bikeSubcategory = await BikesSubcategory.find().sort('category');
+    return successResponse(res, 200, 'bike subcategory is sent.', true, bikeSubcategory);
+}
+
+const findbikeSubcategoryMake = async(req, res) => {
+    const bikeSubcategory = await BikesSubcategory.find({subcategory: req.params.subcategory}).select('make').sort('make');
+    return successResponse(res, 200, 'bike subcategory is sent.', true, bikeSubcategory);
+}
+
+const findVehicle = async(req, res) => {
+    const type = req.params.type;
+        if(type === 'autos'){
+            const cars = await Cars.find().select('make').sort('make');
+            return successResponse(res, 200, 'car is created.', true, cars );
+        }else if(type === "Bikes"){
+            const motorcycle = await Motorcycles.find().select('make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, motorcycle );
+        }else{
+            return failedResponse(res, 400, 'sorry no record found.', false)
+        }   
+    
 }
 
 
@@ -177,5 +211,10 @@ export {
     findCars,
     findCarModels,
     motorcycles,
-    BikesSubCategory
+    BikesSubCategory,
+    findMotorcycle,
+    findMotorcycleModel,
+    findBikeSubcategory,
+    findbikeSubcategoryMake,
+    findVehicle,
 }
