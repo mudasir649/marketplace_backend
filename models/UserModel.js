@@ -28,8 +28,7 @@ const UserSchema = new mongoose.Schema({
         minSelect:8
     },
     phoneNumber: {
-        type: Number,
-        default: null
+        type: String,
     },
 }, { timestamps: true });
 
