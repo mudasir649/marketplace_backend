@@ -108,7 +108,7 @@ const updateProfile = async(req, res) => {
       if(user){
         return successResponse(res, 200, 'user profile updated successfully', true, user);
       }
-    }else{
+    }else if(req.files){
       const image = await uploadSingleImage(req.files.file);
       const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName, phoneNumber, website, viber, whatsapp }, { new: true });
       if(user){
@@ -120,7 +120,7 @@ const updateProfile = async(req, res) => {
           username: user?.userName,
           firstName: user?.firstName,
           lastName: user?.lastName,
-          phoneNumber: user?.phoneNnumber
+          phoneNumber: user?.phoneNumber
         }
         return successResponse(res, 200, 'user profile updated successfully', true, { token, userDetails });
       }   
