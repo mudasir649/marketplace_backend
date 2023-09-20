@@ -1,4 +1,5 @@
 import Ad from '../models/AdModel.js';
+import Cars from '../models/CarsModel.js';
 import FavoriteAd from '../models/FavoriteAdModel.js';
 import User from '../models/UserModel.js';
 import { successResponse, failedResponse } from '../utils/response.js';
@@ -132,6 +133,22 @@ const addToFavorite = async(req, res) => {
     }
 }
 
+const car = async(req, res) => {
+    const cars = await Cars.create(req.body);
+    return successResponse(res, 201, 'car is created.', true, cars );
+}
+
+const findCars = async(req, res) => {
+    const cars = await Cars.find().select('make');
+    return successResponse(res, 201, 'car is created.', true, cars );
+}
+
+const findCarModels = async(req, res) => {
+    const cars = await Cars.find({make: req.params.model}).select('model');
+    return successResponse(res, 201, 'car is created.', true, cars );
+}
+
+
 
 
 export {
@@ -144,4 +161,7 @@ export {
     deleteAd,
     addToFavorite,
     filterSearch,
+    car,
+    findCars,
+    findCarModels
 }

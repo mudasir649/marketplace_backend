@@ -1,17 +1,8 @@
 import epxress from "express";
-// import { addView, createAd, fetchAllAds, fetchFeaturedAds, fetchTopAds, getSpecificAd, addToFavorite, removeFromFavorite, testApi } from "../controllers/adController.js";
-import { createAd, fetchAllAds, fetchFeaturedAds, fetchTopAds, addView, getSpecificAd, deleteAd, addToFavorite, filterSearch } from "../controllers/adController.js";
+import { createAd, fetchAllAds, fetchFeaturedAds, fetchTopAds, addView, getSpecificAd, 
+        deleteAd, addToFavorite, filterSearch, car, findCars, findCarModels } from "../controllers/adController.js";
 
 const router = epxress.Router();
-
-// router.get('/', fetchAllAds).
-//         get('/fetchFeatured', fetchFeaturedAds).
-//         get('/fetchTopAds', fetchTopAds).
-//         post('/adPost', createAd).
-//         patch('/addView', addView)
-//         .get('/getSpecific/:id', getSpecificAd).
-//         post('/addFavorite', addToFavorite).
-//         delete('/removeFavorite', removeFromFavorite);
 
 router.get('/', fetchAllAds).
         get('/fetchFeatured', fetchFeaturedAds).
@@ -21,5 +12,8 @@ router.get('/', fetchAllAds).
         patch('/addView', addView).
         delete('/deleteAd/:id', deleteAd).
         post('/adFavorite', addToFavorite).
-        post('/searchRecord', filterSearch);
+        post('/searchRecord', filterSearch).
+        post('/car', car).
+        get('/allCars', findCars).
+        get('/findModels/:model', findCarModels);
 export default router

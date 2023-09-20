@@ -26,6 +26,14 @@ const AdSchema = new mongoose.Schema({
         type: Number,
         default: null
     },
+    minPrice: {
+        type: Number,
+        default: 0
+    },
+    maxPrice: {
+        type: Number,
+        default: 0
+    },
     condition: {
         type: String,
         default: null
