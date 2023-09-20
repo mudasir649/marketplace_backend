@@ -1,5 +1,6 @@
 import Ad from '../models/AdModel.js';
 import Bicycles from '../models/BicycleModel.js';
+import BikesSubcategory from '../models/BikesSubcategory.js';
 import Cars from '../models/CarsModel.js';
 import E_Bikes from '../models/E_BikesModel.js';
 import E_Scooters from '../models/E_ScooterModel.js';
@@ -142,24 +143,14 @@ const car = async(req, res) => {
     return successResponse(res, 201, 'car is created.', true, cars );
 }
 
-const eScotter = async(req, res) => {
-    const cars = await E_Scooters.create(req.body);
-    return successResponse(res, 201, 'car is created.', true, cars );
-}
-
-const eBikes = async(req, res) => {
-    const cars = await E_Bikes.create(req.body);
-    return successResponse(res, 201, 'car is created.', true, cars );
-}
-
-const bicycles = async(req, res) => {
-    const cars = await Bicycles.create(req.body);
-    return successResponse(res, 201, 'car is created.', true, cars );
+const BikesSubCategory = async (req, res) => {
+    const bikesSub = await BikesSubcategory.create(req.body);
+    return successResponse(res, 201, 'Bikes subcategory is created.', true,  bikesSub);
 }
 
 const motorcycles = async(req, res) => {
-    const cars = await Motorcycles.create(req.body);
-    return successResponse(res, 201, 'car is created.', true, cars );
+    const motorcycle = await Motorcycles.create(req.body);
+    return successResponse(res, 201, 'motorcycle is created.', true, motorcycle );
 }
 
 const findCars = async(req, res) => {
@@ -188,8 +179,6 @@ export {
     car,
     findCars,
     findCarModels,
-    eScotter,
-    eBikes,
     motorcycles,
-    bicycles
+    BikesSubCategory
 }
