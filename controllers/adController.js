@@ -1,6 +1,10 @@
 import Ad from '../models/AdModel.js';
+import Bicycles from '../models/BicycleModel.js';
 import Cars from '../models/CarsModel.js';
+import E_Bikes from '../models/E_BikesModel.js';
+import E_Scooters from '../models/E_ScooterModel.js';
 import FavoriteAd from '../models/FavoriteAdModel.js';
+import Motorcycles from '../models/MotorcycleModel.js';
 import User from '../models/UserModel.js';
 import { successResponse, failedResponse } from '../utils/response.js';
 import { uploadMultipleImage, uploadSingleImage } from '../utils/uploadImage.js'
@@ -19,7 +23,7 @@ const fetchAllAds = async (req, res) => {
         const skip = (req.query.page - 1) * 10;
         const ad = await Ad.find().sort({createdAt: -1}).skip(skip).limit(10);
         const totalAds = await Ad.find().count();
-        return successResponse(res, 201, 'All ads are sent.', true, {ad, totalAds});
+        return successResponse(res, 200, 'All ads are sent.', true, {ad, totalAds});
     } catch (error) {
         return failedResponse(res, 500, 'Unable to sent ads.', false);
     }
@@ -28,7 +32,7 @@ const fetchAllAds = async (req, res) => {
 const fetchFeaturedAds = async (req, res) => {
     try {
         const ad = await Ad.find().sort({createdAt: -1}).limit(12);
-        return successResponse(res, 201, 'All ads are sent.', true, ad);
+        return successResponse(res, 200, 'All ads are sent.', true, ad);
     } catch (error) {
         return failedResponse(res, 500, 'Unable to sent ads.', false);
     }
@@ -138,6 +142,26 @@ const car = async(req, res) => {
     return successResponse(res, 201, 'car is created.', true, cars );
 }
 
+const eScotter = async(req, res) => {
+    const cars = await E_Scooters.create(req.body);
+    return successResponse(res, 201, 'car is created.', true, cars );
+}
+
+const eBikes = async(req, res) => {
+    const cars = await E_Bikes.create(req.body);
+    return successResponse(res, 201, 'car is created.', true, cars );
+}
+
+const bicycles = async(req, res) => {
+    const cars = await Bicycles.create(req.body);
+    return successResponse(res, 201, 'car is created.', true, cars );
+}
+
+const motorcycles = async(req, res) => {
+    const cars = await Motorcycles.create(req.body);
+    return successResponse(res, 201, 'car is created.', true, cars );
+}
+
 const findCars = async(req, res) => {
     const cars = await Cars.find().select('make');
     return successResponse(res, 201, 'car is created.', true, cars );
@@ -163,5 +187,9 @@ export {
     filterSearch,
     car,
     findCars,
-    findCarModels
+    findCarModels,
+    eScotter,
+    eBikes,
+    motorcycles,
+    bicycles
 }
