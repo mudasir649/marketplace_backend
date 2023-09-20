@@ -7,7 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import fileUpload from 'express-fileupload';
 import dbConnection from './utils/dbConnection.js'
 import adRoutes from './routes/adRoutes.js';
-import googleRoutes from './routes/gogoleRoutes.js';
+import googleRoutes from './routes/googleRoutes.js';
 
 const app = express();
 
@@ -33,7 +33,7 @@ app.use('/googleRoutes', googleRoutes)
 app.use('/auth', authRoutes);
 app.use('/ad', adRoutes)
 
-const PORT = process.env.BACK_END_PORT || 8080;
+const PORT = process.env.BACK_END_PORT || 4000;
 
 app.listen(PORT,() => {
     console.log(`App running on port ${PORT}`);
