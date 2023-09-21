@@ -87,37 +87,44 @@ const updateProfile = async(req, res) => {
       if(firstName && !lastName && !phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { firstName }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
         } 
       }else if(lastName && !firstName && !phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { lastName }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
         } 
       }else if(phoneNumber && !firstName && !lastName){
         const user = await User.findByIdAndUpdate({_id: userId}, { phone }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
         } 
       }else if(lastName && firstName && !phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
-        } 
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
+        }  
       }else if(!lastName && firstName && phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { firstName, phoneNumber }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
-        } 
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
+        }  
       }else if(lastName && !firstName && phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { lastName, phoneNumber }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
-        } 
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
+        }  
       }else{
           const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName, phoneNumber }, { new: true });
           if(user){
-            return successResponse(res, 200, 'user profile updated successfully', true, user);
+            const userDetails = await User.findById({ _id: userId }); 
+            return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
           } 
       }
     }else if(req.files){
@@ -125,43 +132,51 @@ const updateProfile = async(req, res) => {
       if(image && !firstName && !lastName && !phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { image }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
-        } 
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
+        }  
       }else if(image && firstName && !lastName && !phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
         } 
       }else if(image && lastName  &&!phoneNumber && !firstName){
         const user = await User.findByIdAndUpdate({_id: userId}, { image, lastName }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
-        } 
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
+        }  
       }else if(image && !lastName && !firstName && phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { image, phoneNumber }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
         } 
       }else if(image && lastName && firstName && !phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
         } 
       }else if(image && !lastName && firstName && phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, phoneNumber }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
         } 
       }else if(image && lastName && !firstName && phoneNumber){
         const user = await User.findByIdAndUpdate({_id: userId}, { image ,lastName, phoneNumber }, { new: true });
         if(user){
-          return successResponse(res, 200, 'user profile updated successfully', true, user);
+          const userDetails = await User.findById({ _id: userId }); 
+          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
         }
       }else{
           const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName, phoneNumber }, { new: true });
           if(user){
-            return successResponse(res, 200, 'user profile updated successfully', true, user);
-          } 
+            const userDetails = await User.findById({ _id: userId }); 
+            return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
+          }
       } 
     }
   } catch (error) {
