@@ -7,22 +7,10 @@ import Ad from "../models/AdModel.js";
 
 const login = async(req, res) => {
     const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-
-    // return res.status(200).json("this is working")
-  
+    const user = await User.findOne({ email }).select('password');
     if (user && (await bcrypt.compare(password, user.password))) {
+      const userDetails = await User.findOne({ email });
       const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
-      const userDetails = {
-        id: user?._id,
-        image: user?.image,
-        email: user?.email,      
-        username: user?.userName,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        phoneNumber: user?.phoneNumber
-      }
       return successResponse(res, 200, 'You are loggedin.', true, {token, userDetails});
     } else {
       return failedResponse(res, 401, 'Invalid email or password.', false);
@@ -30,11 +18,11 @@ const login = async(req, res) => {
 }
 
 const register = async(req, res) => {
-    const { firstName, lastName, email, userName, password, phoneNumber } = req.body;
+    const { firstName, lastName, email, userName, password, phoneNumberNumber } = req.body;
     const existingUser = await User.findOne({email});
     if(existingUser?.email){
         return failedResponse(res, 400, 'Alert! email already exists please enter someother email.', false);
-    }    // console.log(user);
+    }   
     try {
         const existingUser = await User.findOne({email});
         if(existingUser?.email){
@@ -43,19 +31,11 @@ const register = async(req, res) => {
 
         const hash = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, hash);
-        const user = await User.create({firstName, lastName, email, phoneNumber, userName, password: encryptedPassword});
+        const user = await User.create({firstName, lastName, email, phoneNumberNumber, userName, password: encryptedPassword});
         if(user){
             const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
-            const userDetails = {
-              id: user?._id,
-              image: user?.image,
-              email: user?.email,      
-              username: user?.userName,
-              firstName: user?.firstName,
-              lastName: user?.lastName,
-              phoneNumber: user?.phoneNumber
-            }
-            return successResponse(res, 201, 'user created successfully.', true, { token, userDetails}); 
+
+            return successResponse(res, 201, 'user created successfully.', true, { token, user}); 
         }
     } catch (error) {
         return failedResponse(res, 400, 'Unable to create user! please try again.', false);
@@ -100,30 +80,89 @@ const getFavroiteAds = async(req, res) => {
 }
 
 const updateProfile = async(req, res) => {
-  const { firstName, lastName, phoneNumber, website, viber, whatsapp } = req.body;
+  const { firstName, lastName, phoneNumber } = req.body;
   const userId = req.params.id;
   try {
     if(!req.files){
-      const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName, phoneNumber, website, viber, whatsapp }, { new: true });
-      if(user){
-        return successResponse(res, 200, 'user profile updated successfully', true, user);
+      if(firstName && !lastName && !phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { firstName }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(lastName && !firstName && !phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { lastName }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(phoneNumber && !firstName && !lastName){
+        const user = await User.findByIdAndUpdate({_id: userId}, { phone }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(lastName && firstName && !phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(!lastName && firstName && phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { firstName, phoneNumber }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(lastName && !firstName && phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { lastName, phoneNumber }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else{
+          const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName, phoneNumber }, { new: true });
+          if(user){
+            return successResponse(res, 200, 'user profile updated successfully', true, user);
+          } 
       }
     }else if(req.files){
       const image = await uploadSingleImage(req.files.file);
-      const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName, phoneNumber, website, viber, whatsapp }, { new: true });
-      if(user){
-        const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
-        const userDetails = {
-          id: user?._id,
-          image: user?.image,
-          email: user?.email,      
-          username: user?.userName,
-          firstName: user?.firstName,
-          lastName: user?.lastName,
-          phoneNumber: user?.phoneNumber
+      if(image && !firstName && !lastName && !phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { image }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(image && firstName && !lastName && !phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(image && lastName  &&!phoneNumber && !firstName){
+        const user = await User.findByIdAndUpdate({_id: userId}, { image, lastName }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(image && !lastName && !firstName && phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { image, phoneNumber }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(image && lastName && firstName && !phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(image && !lastName && firstName && phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, phoneNumber }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
+        } 
+      }else if(image && lastName && !firstName && phoneNumber){
+        const user = await User.findByIdAndUpdate({_id: userId}, { image ,lastName, phoneNumber }, { new: true });
+        if(user){
+          return successResponse(res, 200, 'user profile updated successfully', true, user);
         }
-        return successResponse(res, 200, 'user profile updated successfully', true, { token, userDetails });
-      }   
+      }else{
+          const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName, phoneNumber }, { new: true });
+          if(user){
+            return successResponse(res, 200, 'user profile updated successfully', true, user);
+          } 
+      } 
     }
   } catch (error) {
     return failedResponse(res, 500, 'something went wrong.', false)
