@@ -18,7 +18,7 @@ const login = async(req, res) => {
 }
 
 const register = async(req, res) => {
-    const { firstName, lastName, email, userName, password, phoneNumberNumber } = req.body;
+    const { firstName, lastName, email, userName, password, phoneNumber } = req.body;
     const existingUser = await User.findOne({email});
     if(existingUser?.email){
         return failedResponse(res, 400, 'Alert! email already exists please enter someother email.', false);
@@ -31,11 +31,10 @@ const register = async(req, res) => {
 
         const hash = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(password, hash);
-        const user = await User.create({firstName, lastName, email, phoneNumberNumber, userName, password: encryptedPassword});
-        if(user){
+        const userDetails = await User.create({firstName, lastName, email, phoneNumber, userName, password: encryptedPassword});
+        if(userDetails){
             const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
-
-            return successResponse(res, 201, 'user created successfully.', true, { token, user}); 
+            return successResponse(res, 201, 'user created successfully.', true, { token, userDetails}); 
         }
     } catch (error) {
         return failedResponse(res, 400, 'Unable to create user! please try again.', false);
