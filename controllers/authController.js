@@ -33,7 +33,7 @@ const register = async(req, res) => {
         const encryptedPassword = await bcrypt.hash(password, hash);
         const userDetails = await User.create({firstName, lastName, email, phoneNumber, userName, password: encryptedPassword});
         if(userDetails){
-            const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
+            const token = await generateToken(userDetails?._id, userDetails?.email, userDetails?.userName, req,res);
             return successResponse(res, 201, 'user created successfully.', true, { token, userDetails}); 
         }
     } catch (error) {
