@@ -128,10 +128,25 @@ const addToFavorite = async(req, res) => {
     try {
         const favorite = await FavoriteAd.create(req.body);
         const user = await User.findByIdAndUpdate({ _id: data?.userId }, {$push: { favAdIds: favorite?._id }},  { new: true });
-        console.log(user);
         return successResponse(res, 201, 'ad is marked favorite.', true);
     } catch (error) {
         return successResponse(res, 201, 'Unable to mark ad favorite.', false);
+    }
+}
+
+
+const deleteFromfavorite = async(req, res) => {
+    const data = req.body;
+    try {
+        const removeFav = await FavoriteAd.findByIdAndDelete({_id: req.params.id});
+        const updatedUser = await User.findByIdAndUpdate(
+            data.userId,
+            { $pull: { favAdIds: req.params.id } }, // Convert req.params.id to a string
+            { new: true }
+          );
+        return successResponse(res, 204, 'rmeoved from favorite', true);
+    } catch (error) {
+        return failedResponse(res, 500, 'unable to remove from favorite.', false);
     }
 }
 
@@ -217,4 +232,5 @@ export {
     findBikeSubcategory,
     findbikeSubcategoryMake,
     findVehicle,
+    deleteFromfavorite
 }

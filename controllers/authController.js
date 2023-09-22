@@ -52,6 +52,11 @@ const logout = (req, res) => {
         )
 }
 
+const removeFavorite = async (req, res) => {
+  const ad = await User.findByIdAndUpdate({ _id: req.params.id }, { $set: { favAdIds: [] } }, { new: true });
+  return successResponse(res, 200, 'favorite removed successfully.', true, ad);
+}
+
 const getUserAds = async(req, res) => {
   try {
     const getAds = await User.findById({ _id: req.params.id });
@@ -69,8 +74,13 @@ const getFavroiteAds = async(req, res) => {
     let allFavAds = favAds?.favAdIds;
     const favAdsArr = [];
     for (let i = 0; i < allFavAds.length; i++) {
-      const ads = await Ad.findById({_id: allFavAds[i].adId });
-      favAdsArr.push(ads)
+      const adId = allFavAds[i].adId;
+      const ad = await Ad.findById(adId);
+      if(ad){
+        const adObject = ad.toObject();
+        adObject.favAdId = allFavAds[i]._id;
+        favAdsArr.push(adObject);
+      }
     }
     return successResponse(res, 200, 'favorite ads of user is sent successfully.', true, favAdsArr);
   } catch (error) {
@@ -78,110 +88,34 @@ const getFavroiteAds = async(req, res) => {
   }
 }
 
-const updateProfile = async(req, res) => {
+const updateProfile = async (req, res) => {
   const { firstName, lastName, phoneNumber } = req.body;
   const userId = req.params.id;
+
   try {
-    if(!req.files){
-      if(firstName && !lastName && !phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { firstName }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        } 
-      }else if(lastName && !firstName && !phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { lastName }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        } 
-      }else if(phoneNumber && !firstName && !lastName){
-        const user = await User.findByIdAndUpdate({_id: userId}, { phone }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        } 
-      }else if(lastName && firstName && !phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        }  
-      }else if(!lastName && firstName && phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { firstName, phoneNumber }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        }  
-      }else if(lastName && !firstName && phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { lastName, phoneNumber }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        }  
-      }else{
-          const user = await User.findByIdAndUpdate({_id: userId}, { firstName, lastName, phoneNumber }, { new: true });
-          if(user){
-            const userDetails = await User.findById({ _id: userId }); 
-            return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-          } 
-      }
-    }else if(req.files){
+    const updates = {};
+
+    if (firstName !== undefined) updates.firstName = firstName;
+    if (lastName !== undefined) updates.lastName = lastName;
+    if (phoneNumber !== undefined) updates.phoneNumber = phoneNumber;
+
+    if (req.files) {
       const image = await uploadSingleImage(req.files.file);
-      if(image && !firstName && !lastName && !phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { image }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        }  
-      }else if(image && firstName && !lastName && !phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        } 
-      }else if(image && lastName  &&!phoneNumber && !firstName){
-        const user = await User.findByIdAndUpdate({_id: userId}, { image, lastName }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        }  
-      }else if(image && !lastName && !firstName && phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { image, phoneNumber }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        } 
-      }else if(image && lastName && firstName && !phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        } 
-      }else if(image && !lastName && firstName && phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, phoneNumber }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        } 
-      }else if(image && lastName && !firstName && phoneNumber){
-        const user = await User.findByIdAndUpdate({_id: userId}, { image ,lastName, phoneNumber }, { new: true });
-        if(user){
-          const userDetails = await User.findById({ _id: userId }); 
-          return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-        }
-      }else{
-          const user = await User.findByIdAndUpdate({_id: userId}, { image, firstName, lastName, phoneNumber }, { new: true });
-          if(user){
-            const userDetails = await User.findById({ _id: userId }); 
-            return successResponse(res, 200, 'user updated successfully', true, { userDetails });        
-          }
-      } 
+      if (image) updates.image = image;
     }
+
+    const user = await User.findByIdAndUpdate({ _id: userId }, updates, { new: true });
+
+    if (user) {
+      const userDetails = await User.findById({ _id: userId });
+      return successResponse(res, 200, 'User updated successfully', true, { userDetails });
+    }
+
+    return failedResponse(res, 404, 'User not found', false);
   } catch (error) {
-    return failedResponse(res, 500, 'something went wrong.', false)
+    return failedResponse(res, 500, 'Something went wrong.', false);
   }
-}
+};
 
 export {
     register,
@@ -189,5 +123,6 @@ export {
     logout,
     updateProfile,
     getUserAds,
-    getFavroiteAds
+    getFavroiteAds,
+    removeFavorite
 }
