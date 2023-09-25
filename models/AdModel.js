@@ -106,6 +106,10 @@ const AdSchema = new mongoose.Schema({
         type: Number,
         default: null
     },
+    axeltype: {
+        type: String,
+        default: null
+    },
     views: {
         type: Number,
         default:0

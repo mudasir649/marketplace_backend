@@ -4,8 +4,15 @@ import Cars from '../models/CarsModel.js';
 import FavoriteAd from '../models/FavoriteAdModel.js';
 import Motorcycles from '../models/MotorcycleModel.js';
 import User from '../models/UserModel.js';
+import Van from '../models/VanModel.js';
+import Trailer from '../models/TrailerModel.js';
+import ConstructionMachine from '../models/ConstructionMachineModel.js';
 import { successResponse, failedResponse } from '../utils/response.js';
 import { uploadMultipleImage, uploadSingleImage } from '../utils/uploadImage.js'
+import Truck from '../models/TrucksModel.js';
+import Bus from '../models/BussesModel.js';
+import Boats from '../models/BoatsModel.js';
+import Drones from '../models/DronesModel.js';
 
 const fetchTopAds = async(req, res) => {
     try {
@@ -150,10 +157,94 @@ const deleteFromfavorite = async(req, res) => {
     }
 }
 
-const car = async(req, res) => {
-    const cars = await Cars.create(req.body);
-    return successResponse(res, 201, 'car is created.', true, cars );
+const busses = async(req, res) => {
+    const bus = await Trailer.create(req.body);
+    return successResponse(res, 201, 'construction machine is created successfully.', true, bus );
 }
+
+const createBoats = async(req, res) => {
+    const boats = await Boats.create({ makes: [
+        "Boston Whaler",
+        "Sea Ray",
+        "Yamaha",
+        "Beneteau",
+        "Sunseeker",
+        "Chaparral",
+        "Regal",
+        "MasterCraft",
+        "Bayliner",
+        "Grady-White",
+        "Cobalt",
+        "Formula",
+        "Jeanneau",
+        "Malibu",
+        "Hatteras",
+        "Lund",
+        "Ranger Boats",
+        "Tracker",
+        "Cruisers Yachts",
+        "Tiara Yachts",
+        "Scout Boats",
+        "Chris-Craft",
+        "Glastron",
+        "Nautique",
+        "Crownline",
+        "Bavaria Yachts",
+        "Hunter Marine",
+        "Carver Yachts",
+        "Four Winns",
+        "Monterey Boats",
+        "Hobie",
+        "Robalo",
+        "Catalina Yachts",
+        "Larson Boats",
+        "Lagoon Catamarans",
+        "Regulator Marine",
+        "Hydra-Sports",
+        "Fountain Powerboats",
+        "Ferretti Yachts",
+        "Intrepid Powerboats",
+        "Azimut Yachts",
+        "Prestige Yachts",
+        "Jupiter Marine",
+        "Alumacraft",
+        "Jeanneau Sailboats",
+        "Riviera Yachts",
+        "Monte Carlo Yachts",
+        "Baja Marine",
+        "Mako Boats",
+        "Sea Hunt Boats"
+    ]});
+
+    return successResponse(res, 200, 'boats list created successfully', true, boats);
+}
+
+
+const createDrones = async (req, res) => {
+    const drones = await Drones.create({ makes: [
+        "DJI (Dà-Jiāng Innovations)",
+        "Parrot",
+        "Autel Robotics",
+        "Yuneec",
+        "Skydio",
+        "Autel Robotics",
+        "PowerVision",
+        "Holy Stone",
+        "Hubsan",
+        "Walkera",
+        "Eachine",
+        "Ryze Tech (DJI subsidiary)",
+        "Potensic",
+        "Force1",
+        "Contixo",
+        "Altair Aerial",
+        "HGLRC",
+        "ZeroTech",
+        "UVify",
+        "GDU (ProDrone)",
+    ]});
+    return successResponse(res, 200, 'drones are created successfully.', true, drones)
+} 
 
 const BikesSubCategory = async (req, res) => {
     const bikesSub = await BikesSubcategory.create(req.body);
@@ -165,19 +256,9 @@ const motorcycles = async(req, res) => {
     return successResponse(res, 201, 'motorcycle is created.', true, motorcycle );
 }
 
-const findCars = async(req, res) => {
-    const cars = await Cars.find().select('make').sort('make');
-    return successResponse(res, 200, 'car is created.', true, cars );
-}
-
 const findCarModels = async(req, res) => {
     const cars = await Cars.find({make: req.params.model}).select('model').sort('model');
     return successResponse(res, 200, 'car is created.', true, cars );
-}
-
-const findMotorcycle = async(req, res) => {
-    const motorcycle = await Motorcycles.find().select('make').sort('model');
-    return successResponse(res, 200, 'motorcycle make is sent.', true, motorcycle );
 }
 
 const findMotorcycleModel = async(req, res) => {
@@ -185,24 +266,44 @@ const findMotorcycleModel = async(req, res) => {
     return successResponse(res, 200, 'motorcycle model is sent.', true, motorcycle );
 }
 
-const findBikeSubcategory = async(req, res) => {
-    const bikeSubcategory = await BikesSubcategory.find().sort('category');
-    return successResponse(res, 200, 'bike subcategory is sent.', true, bikeSubcategory);
-}
-
-const findbikeSubcategoryMake = async(req, res) => {
-    const bikeSubcategory = await BikesSubcategory.find({subcategory: req.params.subcategory}).select('make').sort('make');
-    return successResponse(res, 200, 'bike subcategory is sent.', true, bikeSubcategory);
-}
-
 const findVehicle = async(req, res) => {
     const type = req.params.type;
-        if(type === 'autos'){
+        if(type === 'Autos'){
             const cars = await Cars.find().select('make').sort('make');
             return successResponse(res, 200, 'car is created.', true, cars );
-        }else if(type === "Bikes"){
-            const motorcycle = await Motorcycles.find().select('make');
+        }else if(type === "Motorcycle"){
+            const motorcycle = await Motorcycles.find().select('make').sort('make');
             return successResponse(res, 200, 'motorcycle make is sent.', true, motorcycle );
+        }else if(type === "Bicycles"){
+            const bikesSubCat = await BikesSubcategory.find({subcategory: 'bicycles'}).select('make').sort('make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true,  bikesSubCat);
+        }else if(type === "E-scooter"){
+            const bikesSubCat = await BikesSubcategory.find({subcategory: 'eScooters'}).select('make').sort('make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, bikesSubCat );
+        }else if(type === "E-bikes"){
+            const bikesSubCat = await BikesSubcategory.find({subcategory: 'eBikes'}).select('make').sort('make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, bikesSubCat );
+        }else if(type === "Busses"){
+            const bus = await Bus.find();
+            return successResponse(res, 200, 'motorcycle make is sent.', true, bus );
+        }else if(type === "Vans"){
+            const van = await Van.find();
+            return successResponse(res, 200, 'motorcycle make is sent.', true, van );
+        }else if(type === "Trailers"){
+            const trailer = await Trailer.find();
+            return successResponse(res, 200, 'motorcycle make is sent.', true, trailer );
+        }else if(type === "Trucks"){
+            const trucks = await Truck.find();
+            return successResponse(res, 200, 'motorcycle make is sent.', true, trucks );
+        }else if(type === "Construction Machine"){
+            const constructionMachine = await ConstructionMachine.find();
+            return successResponse(res, 200, 'motorcycle make is sent.', true, constructionMachine );
+        }else if(type === "Boats"){
+            const boats = await Boats.find();
+            return successResponse(res, 200, 'motorcycle make is sent.', true, boats );
+        }else if(type === "Drones"){
+            const drones = await Drones.find();
+            return successResponse(res, 200, 'motorcycle make is sent.', true, drones );
         }else{
             return failedResponse(res, 400, 'sorry no record found.', false)
         }   
@@ -222,15 +323,13 @@ export {
     deleteAd,
     addToFavorite,
     filterSearch,
-    car,
-    findCars,
     findCarModels,
     motorcycles,
     BikesSubCategory,
-    findMotorcycle,
     findMotorcycleModel,
-    findBikeSubcategory,
-    findbikeSubcategoryMake,
     findVehicle,
-    deleteFromfavorite
+    deleteFromfavorite,
+    busses,
+    createBoats,
+    createDrones,
 }

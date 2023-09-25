@@ -1,7 +1,7 @@
 import epxress from "express";
 import { createAd, fetchAllAds, fetchFeaturedAds, fetchTopAds, addView, getSpecificAd, 
-        deleteAd, addToFavorite, filterSearch, car, findCars, findCarModels, motorcycles, 
-        BikesSubCategory, findMotorcycle, findMotorcycleModel, findBikeSubcategory, findbikeSubcategoryMake, findVehicle, deleteFromfavorite } from "../controllers/adController.js";
+        deleteAd, addToFavorite, filterSearch, findCarModels, motorcycles, 
+        BikesSubCategory, findMotorcycleModel, findVehicle, deleteFromfavorite, busses, createDrones, createBoats } from "../controllers/adController.js";
 
 const router = epxress.Router();
 
@@ -14,15 +14,13 @@ router.get('/', fetchAllAds).
         delete('/deleteAd/:id', deleteAd).
         post('/adFavorite', addToFavorite).
         post('/searchRecord', filterSearch).
-        post('/car', car).
         post('/bikesSubcategory', BikesSubCategory).
         post('/motorcycles', motorcycles).
-        get('/allCars', findCars).
         get('/findModels/:model', findCarModels).
-        get('/allMotorcycle', findMotorcycle).
         get('/motorcycleModels/:model', findMotorcycleModel).
-        get('/findBikeSubcategory', findBikeSubcategory).
-        get('/findBikeSubcategoryMake/:subcategory', findbikeSubcategoryMake).
         get('/findVehicle/:type', findVehicle).
-        delete('/removeFavorite/:id', deleteFromfavorite);
+        get('/createDrone', createDrones).
+        get('/createBoats', createBoats).
+        delete('/removeFavorite/:id', deleteFromfavorite).
+        post('/createBus', busses);
 export default router
