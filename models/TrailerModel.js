@@ -6,7 +6,7 @@ const TrailerSchema = new mongoose.Schema({
             type: String
         }
     ],
-    makes: [
+    make: [
         {
             type: String
         }
