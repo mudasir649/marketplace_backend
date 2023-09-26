@@ -279,7 +279,6 @@ export {
     deleteAd,
     addToFavorite,
     filterSearch,
-    findModels,
     motorcycles,
     BikesSubCategory,
     findModels,
