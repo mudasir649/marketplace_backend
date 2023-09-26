@@ -16,7 +16,7 @@ router.get('/', fetchAllAds).
         post('/searchRecord', filterSearch).
         post('/bikesSubcategory', BikesSubCategory).
         post('/motorcycles', motorcycles).
-        get('/findModels/:type/:model', findModels).
+        get('/findModels/:type/:make', findModels).
         get('/findVehicleMake/:type', findVehicleMake).
         get('/findVehicleCategory/:type', findVehicleCategory).
         delete('/removeFavorite/:id', deleteFromfavorite).
