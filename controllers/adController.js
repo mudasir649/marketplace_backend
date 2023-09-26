@@ -173,15 +173,19 @@ const motorcycles = async(req, res) => {
     return successResponse(res, 201, 'motorcycle is created.', true, motorcycle );
 }
 
-const findCarModels = async(req, res) => {
-    const cars = await Cars.find({make: req.params.model}).select('model').sort('model');
-    return successResponse(res, 200, 'car is created.', true, cars );
+const findModels = async(req, res) => {
+    const { type, make } = req.params;
+    if(type == 'Autos'){
+        const cars = await Cars.find({make: make}).select('model').sort('model');
+        return successResponse(res, 200, 'car is created.', true, cars );
+    }else if(type == 'Motorcycle'){
+        const motorcycle = await Motorcycles.find({ make: make }).select('model').sort('model');
+        return successResponse(res, 200, 'motorcycle model is sent.', true, motorcycle );
+    }else{
+        return failedResponse(res, 400, 'no model exists.', true);
+    }
 }
 
-const findMotorcycleModel = async(req, res) => {
-    const motorcycle = await Motorcycles.find({ make: req.params.model }).select('model').sort('model');
-    return successResponse(res, 200, 'motorcycle model is sent.', true, motorcycle );
-}
 
 const findVehicleMake = async(req, res) => {
     console.log("hello");
@@ -275,10 +279,10 @@ export {
     deleteAd,
     addToFavorite,
     filterSearch,
-    findCarModels,
+    findModels,
     motorcycles,
     BikesSubCategory,
-    findMotorcycleModel,
+    findModels,
     findVehicleMake,
     findVehicleCategory,
     deleteFromfavorite,
