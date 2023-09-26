@@ -183,7 +183,7 @@ const findMotorcycleModel = async(req, res) => {
     return successResponse(res, 200, 'motorcycle model is sent.', true, motorcycle );
 }
 
-const findVehicle = async(req, res) => {
+const findVehicleMake = async(req, res) => {
     console.log("hello");
     const type = req.params.type;
         if(type === 'Autos'){
@@ -201,34 +201,62 @@ const findVehicle = async(req, res) => {
             }
             return successResponse(res, 200, 'motorcycle make is sent.', true, { make: bikeArr} );
         }else if(type === "Bicycles"){
-            const bikesSubCat = await BikesSubcategory.find({category: 'bicycles'}).select('make');
+            const bikesSubCat = await BikesSubcategory.find({category: 'bicycles'}).select('-_id');
             return successResponse(res, 200, 'motorcycle make is sent.', true,  bikesSubCat);
         }else if(type === "E-scooter"){
-            const bikesSubCat = await BikesSubcategory.find({category: 'eScooters'}).select('make');
+            const bikesSubCat = await BikesSubcategory.find({category: 'eScooters'}).select('-_id');
             return successResponse(res, 200, 'motorcycle make is sent.', true, bikesSubCat );
         }else if(type === "E-bikes"){
-            const bikesSubCat = await BikesSubcategory.find({category: 'eBikes'}).select('make');
+            const bikesSubCat = await BikesSubcategory.find({category: 'eBikes'}).select('-_id');
             return successResponse(res, 200, 'motorcycle make is sent.', true, bikesSubCat );
         }else if(type === "Busses"){
-            const bus = await Bus.find().select('make');
+            const bus = await Bus.find().select('-_id -category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, bus );
         }else if(type === "Vans"){
-            const van = await Van.find().select('make');
+            const van = await Van.find().select('-_id -category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, van );
         }else if(type === "Trailers"){
-            const trailer = await Trailer.find().select('make');
+            const trailer = await Trailer.find().select('-_id -category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, trailer );
         }else if(type === "Trucks"){
-            const trucks = await Truck.find().select('make');
+            const trucks = await Truck.find().select('-_id -category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, trucks );
         }else if(type === "Construction Machine"){
-            const constructionMachine = await ConstructionMachine.find().select('make');
+            const constructionMachine = await ConstructionMachine.find().select('-_id -category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, constructionMachine );
         }else if(type === "Boats"){
-            const boats = await Boats.find().select('make');
+            const boats = await Boats.find().select('-_id -category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, boats );
         }else if(type === "Drones"){
-            const drones = await Drones.find().select('make');
+            const drones = await Drones.find().select('-_id -category');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, drones );
+        }else{
+            return failedResponse(res, 400, 'sorry no record found.', false)
+        }   
+}
+
+const findVehicleCategory = async(req, res) => {
+    const type = req.params.type;
+        if(type === "Busses"){
+            const bus = await Bus.find().select('-_id -make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, bus );
+        }else if(type === "Vans"){
+            const van = await Van.find().select('-_id -make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, van );
+        }else if(type === "Trailers"){
+            const trailer = await Trailer.find().select('-_id -make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, trailer );
+        }else if(type === "Trucks"){
+            const trucks = await Truck.find().select('-_id -make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, trucks );
+        }else if(type === "Construction Machine"){
+            const constructionMachine = await ConstructionMachine.find().select('-_id -make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, constructionMachine );
+        }else if(type === "Boats"){
+            const boats = await Boats.find().select('-_id -make');
+            return successResponse(res, 200, 'motorcycle make is sent.', true, boats );
+        }else if(type === "Drones"){
+            const drones = await Drones.find().select('-_id -make');
             return successResponse(res, 200, 'motorcycle make is sent.', true, drones );
         }else{
             return failedResponse(res, 400, 'sorry no record found.', false)
@@ -251,7 +279,8 @@ export {
     motorcycles,
     BikesSubCategory,
     findMotorcycleModel,
-    findVehicle,
+    findVehicleMake,
+    findVehicleCategory,
     deleteFromfavorite,
     busses,
 }
