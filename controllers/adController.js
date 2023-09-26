@@ -64,7 +64,6 @@ const createAd = async (req, res) => {
             data.images = imageData;
             const ad = await Ad.create(data);
             const user = await User.findByIdAndUpdate({ _id:data.userId }, { $push: {adIds: ad?._id} }, { new: true });
-            console.log(user);
             if(ad){
                 return successResponse(res, 201, 'Ad is posted successfully.', true, ad)
             }else{
@@ -188,52 +187,121 @@ const findModels = async(req, res) => {
 
 
 const findVehicleMake = async(req, res) => {
-    console.log("hello");
     const type = req.params.type;
         if(type === 'Autos'){
             let carArr = [];
-            const cars = await Cars.find();
+            const cars = await Cars.find().sort('make');
             for (let i = 0; i < cars.length; i++) {
                 carArr.push(cars[i].make);
             }
             return successResponse(res, 200, 'car is created.', true, { make: carArr } );
         }else if(type === "Motorcycle"){
             let bikeArr = [];
-            const motorcycle = await Motorcycles.find();
+            const motorcycle = await Motorcycles.find().sort('make');
             for (let i = 0; i < motorcycle.length; i++) {
                 bikeArr.push(motorcycle[i].make);
             }
             return successResponse(res, 200, 'motorcycle make is sent.', true, { make: bikeArr} );
         }else if(type === "Bicycles"){
-            const bikesSubCat = await BikesSubcategory.find({category: 'bicycles'}).select('-_id');
-            return successResponse(res, 200, 'motorcycle make is sent.', true,  bikesSubCat);
+            const bikesSubCat = await BikesSubcategory.find({category: 'bicycles'}).select('make');
+            let bikesSubArr = []
+            for (let i = 0; i < bikesSubCat.length; i++) {
+                const makes = bikesSubCat[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    bikesSubArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true,  { make: bikesSubArr});
         }else if(type === "E-scooter"){
-            const bikesSubCat = await BikesSubcategory.find({category: 'eScooters'}).select('-_id');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, bikesSubCat );
+            const bikesSubCat = await BikesSubcategory.find({category: 'eScooters'}).select('make');
+            let bikesSubArr = []
+            for (let i = 0; i < bikesSubCat.length; i++) {
+                const makes = bikesSubCat[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    bikesSubArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true,  { make: bikesSubArr});
         }else if(type === "E-bikes"){
-            const bikesSubCat = await BikesSubcategory.find({category: 'eBikes'}).select('-_id');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, bikesSubCat );
+            const bikesSubCat = await BikesSubcategory.find({category: 'eBikes'}).select('make');
+            let bikesSubArr = []
+            for (let i = 0; i < bikesSubCat.length; i++) {
+                const makes = bikesSubCat[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    bikesSubArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true,  { make: bikesSubArr});
         }else if(type === "Busses"){
-            const bus = await Bus.find().select('-_id -category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, bus );
+            const bus = await Bus.find();
+            let busArr = []
+            for (let i = 0; i < bus.length; i++) {
+                const makes = bus[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    busArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true, {make: busArr} );
         }else if(type === "Vans"){
-            const van = await Van.find().select('-_id -category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, van );
+            const van = await Van.find().select('make');
+            let vanArr = []
+            for (let i = 0; i < van.length; i++) {
+                const makes = van[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    vanArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true, { make: vanArr } );
         }else if(type === "Trailers"){
-            const trailer = await Trailer.find().select('-_id -category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, trailer );
+            const trailer = await Trailer.find().select('make');
+            let trailerArr = []
+            for (let i = 0; i < trailer.length; i++) {
+                const makes = trailer[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    trailerArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true, { make: trailerArr } );
         }else if(type === "Trucks"){
-            const trucks = await Truck.find().select('-_id -category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, trucks );
+            const trucks = await Truck.find().select('make');
+            let trucksArr = []
+            for (let i = 0; i < trucks.length; i++) {
+                const makes = trucks[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    trucksArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true, { make: trucksArr} );
         }else if(type === "Construction Machine"){
-            const constructionMachine = await ConstructionMachine.find().select('-_id -category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, constructionMachine );
+            const constructionMachine = await ConstructionMachine.find().select('make');
+            let cnArr = []
+            for (let i = 0; i < constructionMachine.length; i++) {
+                const makes = constructionMachine[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    cnArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true, {make: cnArr} );
         }else if(type === "Boats"){
-            const boats = await Boats.find().select('-_id -category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, boats );
+            const boats = await Boats.find().select('make');
+            let boatsArr = []
+            for (let i = 0; i < boats.length; i++) {
+                const makes = boats[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    boatsArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true, { make: boatsArr} );
         }else if(type === "Drones"){
-            const drones = await Drones.find().select('-_id -category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, drones );
+            const drones = await Drones.find().select('make');
+            let droneArr = []
+            for (let i = 0; i < drones.length; i++) {
+                const makes = drones[i].make;
+                for (let j = 0; j < makes.length; j++) {
+                    droneArr.push(makes[j]);
+                }
+            }
+            return successResponse(res, 200, 'motorcycle make is sent.', true, { make: droneArr} );
         }else{
             return failedResponse(res, 400, 'sorry no record found.', false)
         }   
@@ -242,25 +310,25 @@ const findVehicleMake = async(req, res) => {
 const findVehicleCategory = async(req, res) => {
     const type = req.params.type;
         if(type === "Busses"){
-            const bus = await Bus.find().select('-_id -make');
+            const bus = await Bus.find().select('+category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, bus );
         }else if(type === "Vans"){
-            const van = await Van.find().select('-_id -make');
+            const van = await Van.find().select('+category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, van );
         }else if(type === "Trailers"){
-            const trailer = await Trailer.find().select('-_id -make');
+            const trailer = await Trailer.find().select('+category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, trailer );
         }else if(type === "Trucks"){
-            const trucks = await Truck.find().select('-_id -make');
+            const trucks = await Truck.find().select('+category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, trucks );
         }else if(type === "Construction Machine"){
-            const constructionMachine = await ConstructionMachine.find().select('-_id -make');
+            const constructionMachine = await ConstructionMachine.find().select('+category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, constructionMachine );
         }else if(type === "Boats"){
-            const boats = await Boats.find().select('-_id -make');
+            const boats = await Boats.find().select('+category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, boats );
         }else if(type === "Drones"){
-            const drones = await Drones.find().select('-_id -make');
+            const drones = await Drones.find().select('+category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, drones );
         }else{
             return failedResponse(res, 400, 'sorry no record found.', false)
