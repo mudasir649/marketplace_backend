@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
     favAdIds:[{ type:'ObjectId', ref:"FavoriteAd" }],
     image: {
         type: String,
-        default: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1695098467/zqm4qqydona42g7vi3hu.png'
+        default: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1695709555/profile_logo_pcsium.png'
     },
     firstName: {
         type: String,
