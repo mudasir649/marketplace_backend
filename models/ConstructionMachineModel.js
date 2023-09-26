@@ -6,7 +6,7 @@ const ConstructionMachineSchema = new mongoose.Schema({
             type: String
         }
     ],
-    makes: [
+    make: [
         {
             type: String
         }

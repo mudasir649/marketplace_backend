@@ -6,7 +6,7 @@ const BusSchema = new mongoose.Schema({
             type: String
         }
     ],
-    makes: [
+    make: [
         {
             type: String
         }

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const BoatsModel = new mongoose.Schema({
-    makes: [
+    make: [
         {
             type: String
         }
