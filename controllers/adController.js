@@ -100,14 +100,20 @@ const deleteAd = async(req, res) => {
 }
 
 const filterSearch = async(req, res) => {
-    const { address, category, subcategory, model, page } = req.query;
+    const { address, category, subCategory, model, page } = req.query;
     try {
         if(category){
             const skip = (page - 1) * 10;
             const ad = await Ad.find({ category: category }).sort({ createdAt: -1 }).skip(skip).limit(10);
             const totalAds = await Ad.find({ category: category }).count();
             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-        }else{
+        }if(subCategory){
+            const skip = (page - 1) * 10;
+            const ad = await Ad.find({ subCategory: subCategory }).sort({ createdAt: -1 }).skip(skip).limit(10);
+            const totalAds = await Ad.find({ subCategory: subCategory }).count();
+            return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+        }
+        else{
             return successResponse(res, 200, 'No record found.', true)
         }
     } catch (error) {
