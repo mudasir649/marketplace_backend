@@ -100,26 +100,13 @@ const deleteAd = async(req, res) => {
 }
 
 const filterSearch = async(req, res) => {
-    const { address, category, subcategory, model }= req.body;
+    const { address, category, subcategory, model, page } = req.query;
     try {
-        if(address && category && model){
-            const ad = await Ad.find({ address: address, category: category, model: model });
-            return successResponse(res, 200, 'All records are sent.', true, ad);
-        }else if(address && category && subcategory && model){
-            const ad = await Ad.find({ address: address, category: category, subCategory: subcategory, model: model });
-            return successResponse(res, 200, 'All records are sent.', true, ad);
-        }else if(address && category && subcategory){
-            const ad = await Ad.find({ address: address, category: category, subCategory: subcategory });
-            return successResponse(res, 200, 'All records are sent.', true, ad);
-        }else if(address && category){
-            const ad = await Ad.find({ address: address, category: category });
-            return successResponse(res, 200, 'All records are sent.', true, ad);
-        }else if(category){
-            const ad = await Ad.find({ category: category });
-            return successResponse(res, 200, 'All records are sent.', true, ad);
-        }else if(address){
-            const ad = await Ad.find({ address: address });
-            return successResponse(res, 200, 'All records are sent.', true, ad);
+        if(category){
+            const skip = (page - 1) * 10;
+            const ad = await Ad.find({ category: category }).sort({ createdAt: -1 }).skip(skip).limit(10);
+            const totalAds = await Ad.find({ category: category }).count();
+            return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
         }else{
             return successResponse(res, 200, 'No record found.', true)
         }
@@ -307,29 +294,23 @@ const findVehicleMake = async(req, res) => {
         }   
 }
 
-const findVehicleCategory = async(req, res) => {
+const findVehicleSubCategory = async(req, res) => {
     const type = req.params.type;
         if(type === "Busses"){
-            const bus = await Bus.find().select('+category');
+            const bus = await Bus.find().select('category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, bus );
         }else if(type === "Vans"){
-            const van = await Van.find().select('+category');
+            const van = await Van.find().select('category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, van );
         }else if(type === "Trailers"){
-            const trailer = await Trailer.find().select('+category');
+            const trailer = await Trailer.find().select('category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, trailer );
         }else if(type === "Trucks"){
-            const trucks = await Truck.find().select('+category');
+            const trucks = await Truck.find().select('category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, trucks );
         }else if(type === "Construction Machine"){
-            const constructionMachine = await ConstructionMachine.find().select('+category');
+            const constructionMachine = await ConstructionMachine.find().select('category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, constructionMachine );
-        }else if(type === "Boats"){
-            const boats = await Boats.find().select('+category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, boats );
-        }else if(type === "Drones"){
-            const drones = await Drones.find().select('+category');
-            return successResponse(res, 200, 'motorcycle make is sent.', true, drones );
         }else{
             return failedResponse(res, 400, 'sorry no record found.', false)
         }   
@@ -351,7 +332,7 @@ export {
     BikesSubCategory,
     findModels,
     findVehicleMake,
-    findVehicleCategory,
+    findVehicleSubCategory,
     deleteFromfavorite,
     busses,
 }
