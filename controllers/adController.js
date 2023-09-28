@@ -121,6 +121,33 @@ const filterSearch = async(req, res) => {
     }
 }
 
+const advanceSearchFilter = async(req, res) => {
+    const { condition, brand, minPrice, maxPrice, page } = req.query;
+    const skip = (page - 1) * 10;
+    
+    let query = {};
+
+    if(condition) query.condition = condition;
+    if(brand) query.brand = brand;
+    if(minPrice !== '' && maxPrice == ''){
+        query.price = { $lte: minPrice }
+    }else if(maxPrice !== '' && minPrice == ''){
+        query.price = { $gte: maxPrice }
+    }else if(maxPrice !== '' && minPrice !== ''){
+        query.price = { $gte: maxPrice, $lte: minPrice }
+    }
+
+    if(Object.keys(query).length == 0){
+        const ad = await Ad.find().sort({ createdAt: -1 }).skip(skip).limit(10);
+        const totalAds = ad.length;
+        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds });   
+    }else{
+        const ad = await Ad.find(query).sort({ createdAt: -1 }).skip(skip).limit(10);
+        const totalAds = ad.length;
+        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds });   
+    }
+}
+
 
 const addToFavorite = async(req, res) => {
      const data = req.body;
@@ -341,4 +368,5 @@ export {
     findVehicleSubCategory,
     deleteFromfavorite,
     busses,
+    advanceSearchFilter
 }

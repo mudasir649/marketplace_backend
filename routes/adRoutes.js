@@ -1,7 +1,7 @@
 import epxress from "express";
 import { createAd, fetchAllAds, fetchFeaturedAds, fetchTopAds, addView, getSpecificAd, 
         deleteAd, addToFavorite, filterSearch, motorcycles, 
-        BikesSubCategory, findModels, deleteFromfavorite, busses, findVehicleMake, findVehicleSubCategory } from "../controllers/adController.js";
+        BikesSubCategory, findModels, deleteFromfavorite, busses, findVehicleMake, findVehicleSubCategory, advanceSearchFilter } from "../controllers/adController.js";
 
 const router = epxress.Router();
 
@@ -20,5 +20,6 @@ router.get('/', fetchAllAds).
         get('/findVehicleMake/:type', findVehicleMake).
         get('/findVehicleSubCategory/:type', findVehicleSubCategory).
         delete('/removeFavorite/:id', deleteFromfavorite).
+        get('/advance-search-filter', advanceSearchFilter).
         post('/createBus', busses);
 export default router
