@@ -2,8 +2,12 @@ import User from "../models/UserModel.js";
 import { failedResponse, successResponse } from "../utils/response.js";
 import generateToken from "../utils/generateJWT.js";
 import bcrypt from "bcrypt";
-import { uploadSingleImage } from '../utils/uploadImage.js';
+import { uploadMultipleImage, uploadSingleImage } from '../utils/uploadImage.js';
 import Ad from "../models/AdModel.js";
+import Sib from "sib-api-v3-sdk";
+import userEmail from "../utils/email.js";
+
+
 
 const login = async(req, res) => {
     const { email, password } = req.body;
@@ -117,6 +121,36 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const sendEmail = async (req, res) => {
+  const { subject, message, email, fullName, make, model, year, description, phoneNo } = req.body;
+
+  if(req.files !== undefined){
+    const { file } = req.files;
+    let image;
+    if(file.length > 1){
+      image = await uploadMultipleImage(file);
+    }else{
+      image = await uploadSingleImage(file);
+    }
+    try {
+      const sentEmail = await userEmail(subject, message, image, email, fullName, make, model, year, description, phoneNo);
+      return successResponse(res, 200, 'Email is sent successfully', true)
+    } catch (error) {
+      return failedResponse(res, 400, 'Email is not sent', false);
+    }
+  }else{
+    try {
+      const sentEmail = await userEmail(subject, message, email);
+      return successResponse(res, 200, 'Email is sent successfully', true)
+    } catch (error) {
+      return failedResponse(res, 400, 'Email is not sent', false);
+    }
+  }
+};
+
+
+
+
 export {
     register,
     login,
@@ -124,5 +158,6 @@ export {
     updateProfile,
     getUserAds,
     getFavroiteAds,
-    removeFavorite
+    removeFavorite,
+    sendEmail
 }
