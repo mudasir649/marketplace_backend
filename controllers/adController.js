@@ -122,9 +122,9 @@ const filterSearch = async(req, res) => {
 }
 
 const advanceSearchFilter = async(req, res) => {
-    const { condition, brand, minPrice, maxPrice, page } = req.query;
+    const { condition, brand, minPrice, maxPrice, page, sortBy } = req.query;
     const skip = (page - 1) * 10;
-    
+
     let query = {};
 
     if(condition) query.condition = condition;
@@ -137,13 +137,29 @@ const advanceSearchFilter = async(req, res) => {
         query.price = { $gte: maxPrice, $lte: minPrice }
     }
 
-    if(Object.keys(query).length == 0){
-        const ad = await Ad.find().sort({ createdAt: -1 }).skip(skip).limit(10);
-        const totalAds = ad.length;
+    if(sortBy == 'A to Z (title)'){
+        const ad = await Ad.find().sort({ title: 1 }).skip(skip).limit(10);
+        const totalAds = await Ad.find().count();
+        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds }); 
+    }else if(sortBy == 'Z to A (title)'){
+        const ad = await Ad.find().sort({ title: -1 }).skip(skip).limit(10);
+        const totalAds = await Ad.find().count();
+        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds }); 
+    }else if(sortBy == 'Price (low to high)'){
+        const ad = await Ad.find().sort({ price: 1 }).skip(skip).limit(10);
+        const totalAds = await Ad.find().count();
+        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds }); 
+    }else if(sortBy == 'Price (high to low)'){
+        const ad = await Ad.find().sort({ price: -1 }).skip(skip).limit(10);
+        const totalAds = await Ad.find().count();
+        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds }); 
+    }else if(Object.keys(query).length == 0){
+        const ad = await Ad.find().sort({ createdAt: 1 }).skip(skip).limit(10);
+        const totalAds = await Ad.find().count();
         return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds });   
     }else{
         const ad = await Ad.find(query).sort({ createdAt: -1 }).skip(skip).limit(10);
-        const totalAds = ad.length;
+        const totalAds = await Ad.find(query).count();
         return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds });   
     }
 }
@@ -350,6 +366,20 @@ const findVehicleSubCategory = async(req, res) => {
 }
 
 
+const searchMake = async(req, res) => {
+    try {
+        const { searchTerm } = req.query;
+        const regex = new RegExp(searchTerm, "i");
+
+        const make = await Cars.find({ make: regex }).sort({ createdAt: -1 });
+        return successResponse(res, 200, 'Make found successfully.', true, make);
+
+    } catch (error) {
+        return failedResponse(res, 400, 'something wrong.', false);
+    }
+}
+
+
 
 export {
     fetchTopAds,
@@ -368,5 +398,6 @@ export {
     findVehicleSubCategory,
     deleteFromfavorite,
     busses,
-    advanceSearchFilter
+    advanceSearchFilter,
+    searchMake
 }
