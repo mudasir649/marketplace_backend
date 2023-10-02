@@ -24,14 +24,38 @@ const fetchTopAds = async(req, res) => {
 }
 
 const fetchAllAds = async (req, res) => {
-    try {
-        const skip = (req.query.page - 1) * 10;
-        const ad = await Ad.find().sort({createdAt: -1}).skip(skip).limit(10);
-        const totalAds = await Ad.find().count();
-        return successResponse(res, 200, 'All ads are sent.', true, {ad, totalAds});
-    } catch (error) {
-        return failedResponse(res, 500, 'Unable to sent ads.', false);
-    }
+
+    const { address, category, subCategory, title, page } = req.query;
+    
+        const addressRegex = new RegExp(address, "i");
+        const titleRegex = new RegExp(title, "i");
+    
+        const skip = (page - 1) * 10;
+        try {
+            let query = {};
+            if(category){
+                query = { category };
+            }else if(subCategory){
+                query = { subCategory }
+            }else if(address && title){
+                query = { address: addressRegex, title: titleRegex }
+            }else if(address){
+                query = { address: addressRegex }
+            }else if(title){
+                query = { title: titleRegex }
+            }
+
+            const ad = await Ad.find(query).sort({ createdAt: -1 }).skip(skip).limit(10);
+            const totalAds = await Ad.find(query).count();
+
+            if(totalAds > 0){
+                return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+            }else{
+                return successResponse(res, 200, 'No record found.', true, { ad, totalAds });
+            }
+        } catch (error) {
+            return failedResponse(res, 400, 'Unable to search record.', false);
+        }
 }
 
 const fetchFeaturedAds = async (req, res) => {
@@ -99,47 +123,6 @@ const deleteAd = async(req, res) => {
     }
 }
 
-// const filterSearch = async(req, res) => {
-//     const { address, category, subCategory, title, page } = req.query;
-
-//     const addressRegex = new RegExp(address, "i");
-//     const titleRegex = new RegExp(title, "i");
-
-//     const skip = (page - 1) * 10;
-//     try {
-//         if(category){
-//             const ad = await Ad.find({ category: category }).sort({ createdAt: -1 }).skip(skip).limit(10);
-//             const totalAds = await Ad.find({ category: category }).count();
-//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-//         }else if(subCategory){
-//             const ad = await Ad.find({ subCategory: subCategory }).sort({ createdAt: -1 }).skip(skip).limit(10);
-//             const totalAds = await Ad.find({ subCategory: subCategory }).count();
-//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-//         }else if(address && title){
-//             const ad = await Ad.find({ address: addressRegex, title: titleRegex }).sort({ createdAt: -1 }).skip(skip).limit(10);
-//             const totalAds = await Ad.find({ address: addressRegex, title: titleRegex }).count();
-//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-//         }else if(address){
-//             const ad = await Ad.find({ address: addressRegex }).sort({ createdAt: -1 }).skip(skip).limit(10);
-//             const totalAds = await Ad.find({ address: addressRegex }).count();
-//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-//         }else if(title){
-//             const ad = await Ad.find({ title: titleRegex }).sort({ createdAt: -1 }).skip(skip).limit(10);
-//             const totalAds = await Ad.find({ title: titleRegex }).count();
-//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-//         } else if(!address || !category || !subCategory || !title){
-//             const ad = await Ad.find().sort({ createdAt: -1 }).skip(skip).limit(10);
-//             const totalAds = await Ad.find().count();
-//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-//         }
-//         else{
-//             return successResponse(res, 200, 'No record found.', true)
-//         }
-//     } catch (error) {
-//         return failedResponse(res, 500, 'Unable to search record.', false);
-//     }
-// }
-
 const filterSearch = async(req, res) => {
         const { address, category, subCategory, title, page } = req.query;
     
@@ -156,7 +139,7 @@ const filterSearch = async(req, res) => {
             }else if(address && title){
                 query = { address: addressRegex, title: titleRegex }
             }else if(address){
-                query = { title: titleRegex }
+                query = { address: addressRegex }
             }else if(title){
                 query = { title: titleRegex }
             }
