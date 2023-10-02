@@ -1,41 +1,41 @@
-import nodemailer from "nodemailer";
-
-const CLIENT_ID=process.env.BACKEND_GMAIL_CLIENT_SECRET;
-const CLIENT_SECRET=process.env.BACKEND_GMAIL_CLIENT_ID;
+import Sib from "sib-api-v3-sdk";
 
 async function userEmail(subject, message, image, email, fullName, make, model, year, description, phoneNo){
 
+    const client = Sib.ApiClient.instance
+    const apiKey = client.authentications['api-key']
+    apiKey.apiKey = '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';
+
+    const transEmail = new Sib.TransactionalEmailsApi();
+
+    let transportEmail;
+
+    const sender = {
+        email: 'eidcarosse@gmail.com',
+        name:'Steven'
+    }
+
+    const receiver = [
+        {
+            email: 'eidcarosse@gmail.com'
+        }
+    ];
+
     if(image){
         let imgTag;
-        let mailOptions;
         if(typeof image == "object"){
             imgTag = image.map((image, i) => `<img src="${image}" alt="Image ${i + 1}">`).join('');
         }else{
             imgTag = `<img src="${image}" />`
         }
         try {
-            const transport = nodemailer.createTransport({
-                service:'gmail',
-                secure: false,
-                auth: {
-                    type:'OAUTH2',
-                    user:'mudasirriaz649@gmail.com',
-                    clientId: CLIENT_ID,
-                    clientSecret: CLIENT_SECRET,
-                    accessToken:'ya29.a0AfB_byDRp6XjRCnT-io1TcKWCi8aDUldLTQSNNmzGvMRwPKK82c04-oK9Y-tDGPEM--W4mtB2IKKK6eRwKzbkyLxVMbsjiXlqGXWNfhV4BAQVKBhQBqNi4FA7kPqnM7btaNbOtHSsOUtzRQYeu7cgyn1r8i02ovHh-vqaCgYKARwSARMSFQGOcNnCqxn_Nty8wD-LAVr3yksIzw0171'
-                },
-                tls: {
-                    rejectUnauthorized: false
-                  }
-            });
-
             if(fullName && make && model && year && description && phoneNo){
-                mailOptions = {
-                    from: 'mudasirriaz649@gmail.com',
-                    to: 'mudasirriaz649@gmail.com',
-                    subject: subject,
-                    text: 'This is the body of the message.',
-                    html: `<h1>Contact Us.</h1>
+                transportEmail = await transEmail.sendTransacEmail({
+                    sender,
+                    to: receiver,
+                    subject: 'Test email',
+                    textContent: 'This is the body of the message.',
+                    htmlContent: `<h1>Contact Us.</h1>
                     <p>This email for sell now..</p>
                     <br/>
                     <h2>email sent by ${email}</h2>
@@ -52,24 +52,28 @@ async function userEmail(subject, message, image, email, fullName, make, model, 
                     <br/>
                     <h2>Phone Number: ${phoneNo}</h2>
                     ${imgTag}
-                    `
-                }
+                    `,
+                    params: {
+                        role: 'Frontend'
+                    }
+                })
             }else{
-                mailOptions = {
-                    from: 'mudasirriaz649@gmail.com',
-                    to: 'mudasirriaz649@gmail.com',
+                transportEmail = await transEmail.sendTransacEmail({
+                    sender,
+                    to: receiver,
                     subject: subject,
-                    text: 'This is the body of the message.',
-                    html: `<h1>Contact Us.</h1>
+                    textContent: 'This is the body of the message.',
+                    htmlContent: `<h1>Contact Us.</h1>
                     <p>${message}</p>
                     <h2>email sent by ${email}</h2>
-                    ${imgTag}
-                    `
-                }
+                    `,
+                    params: {
+                        role:'Frontend'
+                    }
+                })
             }
     
-            const result = await transport.sendMail(mailOptions);
-    
+            const result = transportEmail;  
             return result;
     
         } catch (error) {
@@ -77,33 +81,21 @@ async function userEmail(subject, message, image, email, fullName, make, model, 
         }    
     }else{
         try {
-            const transport = nodemailer.createTransport({
-                service:'gmail',
-                secure: false,
-                auth: {
-                    type:'OAUTH2',
-                    user:'mudasirriaz649@gmail.com',
-                    clientId: CLIENT_ID,
-                    clientSecret: CLIENT_SECRET,
-                    accessToken:'ya29.a0AfB_byBZVO6zKqAT2hBLfWB5BFi__P-8OcY3AWjLyZB9QN0heQX4mA1vXbPbNBGTLyHFcJY8Artu_Gs6u4YUt6GcPNz5KmGXkunnmKdvdD0ROyrPbLvd-BmAkvu9DftHzENVkcJFLQQPOZ83me8hk_2nb-5fHdpbwG6BaCgYKAVsSARMSFQGOcNnC8IL3c-Fk4WHGgc6_aJo_Cw0171'
-                },
-                tls: {
-                    rejectUnauthorized: false
-                  }
-            });
-        
-            const mailOptions = {
-                from: 'mudasirriaz649@gmail.com',
-                to: 'mudasirriaz649@gmail.com',
+            transportEmail = await transEmail.sendTransacEmail({
+                sender,
+                to: receiver,
                 subject: subject,
-                text: 'This is the body of the message.',
-                html: `<h1>Contact Us.</h1>
+                textContent: 'This is the body of the message.',
+                htmlContent: `<h1>Contact Us.</h1>
                 <p>${message}</p>
                 <h2>email sent by ${email}</h2>
-                `
-            }
+                `,
+                params: {
+                    role: 'Frontend'
+                }
+            })
     
-            const result = await transport.sendMail(mailOptions);
+            const result = transportEmail;
     
             return result;
     
