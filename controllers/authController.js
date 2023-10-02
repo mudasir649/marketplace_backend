@@ -124,7 +124,15 @@ const updateProfile = async (req, res) => {
 const sendEmail = async (req, res) => {
   const { subject, message, email, fullName, make, model, year, description, phoneNo } = req.body;
 
-  if(req.files !== undefined){
+  if(req.files === undefined){
+    try {
+      const sentEmail = await userEmail(subject, message, '', email);
+      console.log(sentEmail);
+      return successResponse(res, 200, 'Email is sent successfully', true, sentEmail)
+    } catch (error) {
+      return failedResponse(res, 400, 'Email is not sent', false);
+    }
+  }else{
     const { file } = req.files;
     let image;
     if(file.length > 1){
@@ -134,14 +142,7 @@ const sendEmail = async (req, res) => {
     }
     try {
       const sentEmail = await userEmail(subject, message, image, email, fullName, make, model, year, description, phoneNo);
-      return successResponse(res, 200, 'Email is sent successfully', true)
-    } catch (error) {
-      return failedResponse(res, 400, 'Email is not sent', false);
-    }
-  }else{
-    try {
-      const sentEmail = await userEmail(subject, message, email);
-      return successResponse(res, 200, 'Email is sent successfully', true)
+      return successResponse(res, 200, 'Email is sent successfully', true, sentEmail)
     } catch (error) {
       return failedResponse(res, 400, 'Email is not sent', false);
     }

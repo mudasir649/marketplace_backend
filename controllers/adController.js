@@ -99,27 +99,80 @@ const deleteAd = async(req, res) => {
     }
 }
 
+// const filterSearch = async(req, res) => {
+//     const { address, category, subCategory, title, page } = req.query;
+
+//     const addressRegex = new RegExp(address, "i");
+//     const titleRegex = new RegExp(title, "i");
+
+//     const skip = (page - 1) * 10;
+//     try {
+//         if(category){
+//             const ad = await Ad.find({ category: category }).sort({ createdAt: -1 }).skip(skip).limit(10);
+//             const totalAds = await Ad.find({ category: category }).count();
+//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+//         }else if(subCategory){
+//             const ad = await Ad.find({ subCategory: subCategory }).sort({ createdAt: -1 }).skip(skip).limit(10);
+//             const totalAds = await Ad.find({ subCategory: subCategory }).count();
+//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+//         }else if(address && title){
+//             const ad = await Ad.find({ address: addressRegex, title: titleRegex }).sort({ createdAt: -1 }).skip(skip).limit(10);
+//             const totalAds = await Ad.find({ address: addressRegex, title: titleRegex }).count();
+//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+//         }else if(address){
+//             const ad = await Ad.find({ address: addressRegex }).sort({ createdAt: -1 }).skip(skip).limit(10);
+//             const totalAds = await Ad.find({ address: addressRegex }).count();
+//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+//         }else if(title){
+//             const ad = await Ad.find({ title: titleRegex }).sort({ createdAt: -1 }).skip(skip).limit(10);
+//             const totalAds = await Ad.find({ title: titleRegex }).count();
+//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+//         } else if(!address || !category || !subCategory || !title){
+//             const ad = await Ad.find().sort({ createdAt: -1 }).skip(skip).limit(10);
+//             const totalAds = await Ad.find().count();
+//             return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+//         }
+//         else{
+//             return successResponse(res, 200, 'No record found.', true)
+//         }
+//     } catch (error) {
+//         return failedResponse(res, 500, 'Unable to search record.', false);
+//     }
+// }
+
 const filterSearch = async(req, res) => {
-    const { address, category, subCategory, model, page } = req.query;
-    try {
-        if(category){
-            const skip = (page - 1) * 10;
-            const ad = await Ad.find({ category: category }).sort({ createdAt: -1 }).skip(skip).limit(10);
-            const totalAds = await Ad.find({ category: category }).count();
-            return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-        }if(subCategory){
-            const skip = (page - 1) * 10;
-            const ad = await Ad.find({ subCategory: subCategory }).sort({ createdAt: -1 }).skip(skip).limit(10);
-            const totalAds = await Ad.find({ subCategory: subCategory }).count();
-            return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+        const { address, category, subCategory, title, page } = req.query;
+    
+        const addressRegex = new RegExp(address, "i");
+        const titleRegex = new RegExp(title, "i");
+    
+        const skip = (page - 1) * 10;
+        try {
+            let query = {};
+            if(category){
+                query = { category };
+            }else if(subCategory){
+                query = { subCategory }
+            }else if(address && title){
+                query = { address: addressRegex, title: titleRegex }
+            }else if(address){
+                query = { title: titleRegex }
+            }else if(title){
+                query = { title: titleRegex }
+            }
+
+            const ad = await Ad.find(query).sort({ createdAt: -1 }).skip(skip).limit(10);
+            const totalAds = await Ad.find(query).count();
+
+            if(totalAds > 0){
+                return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
+            }else{
+                return successResponse(res, 200, 'No record found.', true);
+            }
+        } catch (error) {
+            return failedResponse(res, 400, 'Unable to search record.', false);
         }
-        else{
-            return successResponse(res, 200, 'No record found.', true)
-        }
-    } catch (error) {
-        return failedResponse(res, 500, 'Unable to search record.', false);
     }
-}
 
 const advanceSearchFilter = async(req, res) => {
     const { condition, brand, minPrice, maxPrice, page, sortBy } = req.query;
@@ -183,7 +236,7 @@ const deleteFromfavorite = async(req, res) => {
         const removeFav = await FavoriteAd.findByIdAndDelete({_id: req.params.id});
         const updatedUser = await User.findByIdAndUpdate(
             data.userId,
-            { $pull: { favAdIds: req.params.id } }, // Convert req.params.id to a string
+            { $pull: { favAdIds: req.params.id } },
             { new: true }
           );
         return successResponse(res, 204, 'rmeoved from favorite', true);
@@ -366,13 +419,13 @@ const findVehicleSubCategory = async(req, res) => {
 }
 
 
-const searchMake = async(req, res) => {
+const searchTitle = async(req, res) => {
     try {
         const { searchTerm } = req.query;
         const regex = new RegExp(searchTerm, "i");
 
-        const make = await Cars.find({ make: regex }).sort({ createdAt: -1 });
-        return successResponse(res, 200, 'Make found successfully.', true, make);
+        const make = await Ad.find({ title: regex }).sort({ createdAt: -1 });
+        return successResponse(res, 200, 'Title found successfully.', true, make);
 
     } catch (error) {
         return failedResponse(res, 400, 'something wrong.', false);
@@ -399,5 +452,5 @@ export {
     deleteFromfavorite,
     busses,
     advanceSearchFilter,
-    searchMake
+    searchTitle
 }
