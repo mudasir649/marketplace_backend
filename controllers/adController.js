@@ -369,12 +369,8 @@ export {
     getSpecificAd,
     deleteAd,
     toggleFavorite,
-    filterSearch,
     findModels,
     findVehicleMake,
     findVehicleSubCategory,
-    deleteFromfavorite,
-    busses,
-    advanceSearchFilter,
     searchTitle
 }
