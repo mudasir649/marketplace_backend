@@ -29,12 +29,8 @@ const fetchAllAds = async (req, res) => {
     }
     const { address, category, subCategory, title, page,condition, brand, minPrice, maxPrice, sortBy } = req.query;
 
-    console.log(page);
-    console.log(sortBy);
-  
     const addressRegex = new RegExp(address, "i");
-    const titleRegex = new RegExp(title, "i");
-  
+    const titleRegex = new RegExp(title, "i");  
     const skip = (page - 1) * 10;
     try {
       let query = {};
@@ -67,12 +63,11 @@ const fetchAllAds = async (req, res) => {
             sortOptions = { createdAt: -1 }
             break;
     }
-      const ad = await Ad.find(query)
+        const ad = await Ad.find(query)
         .sort(sortOptions)
         .skip(skip)
         .limit(10);
       const totalAds = await Ad.find(query).count();
-  
       if (totalAds > 0) {
         return successResponse(res, 200, "All records are sent.", true, {
           ad,
