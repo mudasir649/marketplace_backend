@@ -25,7 +25,7 @@ const fetchTopAds = async(req, res) => {
 
 const fetchAllAds = async (req, res) => {
     function isNullOrNullOrEmpty(value) {
-      return value === null || value === undefined || value === "";
+      return value === null || value === undefined || value === "",value === "undefined";
     }
     const { address, category, subCategory, title, page } = req.query;
   
@@ -217,16 +217,39 @@ const advanceSearchFilter = async(req, res) => {
 }
 
 
-const addToFavorite = async(req, res) => {
-     const data = req.body;
+const toggleFavorite = async (req, res) => {
+    const userId = req.body.userId; // Assuming userId is in the request body
+    const adId = req.params.id; // Assuming the adId is in the request params
+  
     try {
-        const favorite = await FavoriteAd.create(req.body);
-        const user = await User.findByIdAndUpdate({ _id: data?.userId }, {$push: { favAdIds: favorite?._id }},  { new: true });
-        return successResponse(res, 201, 'ad is marked favorite.', true);
+      // Check if the user exists and retrieve their favorites
+      const user = await User.findById(userId);
+      if (!user) {
+        return successResponse(res, 404, 'User not found.', false);
+      }
+  
+      // Check if the ad is already in favorites
+      const isAdInFavorites = user.favAdIds.includes(adId);
+  
+      if (isAdInFavorites) {
+        // Remove the ad from favorites
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $pull: { favAdIds: req.params.id } },
+            { new: true }
+          );
+        return successResponse(res, 200, 'Favorite removed successfully.', true, user);
+      } else {
+        // Add the ad to favorites
+        user.favAdIds.push(adId);
+        await user.save();
+        return successResponse(res, 201, 'Ad is marked favorite.', true, user);
+      }
     } catch (error) {
-        return successResponse(res, 201, 'Unable to mark ad favorite.', false);
+      return failedResponse(res, 500, 'Unable to update favorites.', false);
     }
-}
+  };
+  
 
 
 const deleteFromfavorite = async(req, res) => {
@@ -441,7 +464,7 @@ export {
     addView,
     getSpecificAd,
     deleteAd,
-    addToFavorite,
+    toggleFavorite,
     filterSearch,
     motorcycles,
     BikesSubCategory,

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
     adIds:[{ type:'ObjectId', ref:"Ad" }],
-    favAdIds:[{ type:'ObjectId', ref:"FavoriteAd" }],
+    favAdIds:[{ type:'ObjectId', ref:"Ad" }],
     image: {
         type: String,
         default: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1695709555/profile_logo_pcsium.png'
