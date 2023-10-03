@@ -76,17 +76,17 @@ const getFavroiteAds = async(req, res) => {
     const user = await User.findById({ _id: req.params.id }).select('favAdIds');
     const favAds = await user.populate('favAdIds');
     let allFavAds = favAds?.favAdIds;
-    const favAdsArr = [];
-    for (let i = 0; i < allFavAds.length; i++) {
-      const adId = allFavAds[i].adId;
-      const ad = await Ad.findById(adId);
-      if(ad){
-        const adObject = ad.toObject();
-        adObject.favAdId = allFavAds[i]._id;
-        favAdsArr.push(adObject);
-      }
-    }
-    return successResponse(res, 200, 'favorite ads of user is sent successfully.', true, favAdsArr);
+    // const favAdsArr = [];
+    // for (let i = 0; i < allFavAds.length; i++) {
+    //   const adId = allFavAds[i].adId;
+    //   const ad = await Ad.findById(adId);
+    //   if(ad){
+    //     const adObject = ad.toObject();
+    //     adObject.favAdId = allFavAds[i]._id;
+    //     favAdsArr.push(adObject);
+    //   }
+    // }
+    return successResponse(res, 200, 'favorite ads of user is sent successfully.', true, allFavAds);
   } catch (error) {
     return failedResponse(res, 500, 'unable to get favorite ads', false);
   }
