@@ -24,39 +24,55 @@ const fetchTopAds = async(req, res) => {
 }
 
 const fetchAllAds = async (req, res) => {
-
+    function isNullOrNullOrEmpty(value) {
+      return value === null || value === undefined || value === "";
+    }
     const { address, category, subCategory, title, page } = req.query;
-    
-        const addressRegex = new RegExp(address, "i");
-        const titleRegex = new RegExp(title, "i");
-    
-        const skip = (page - 1) * 10;
-        try {
-            let query = {};
-            if(category){
-                query = { category };
-            }else if(subCategory){
-                query = { subCategory }
-            }else if(address && title){
-                query = { address: addressRegex, title: titleRegex }
-            }else if(address){
-                query = { address: addressRegex }
-            }else if(title){
-                query = { title: titleRegex }
-            }
-
-            const ad = await Ad.find(query).sort({ createdAt: -1 }).skip(skip).limit(10);
-            const totalAds = await Ad.find(query).count();
-
-            if(totalAds > 0){
-                return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-            }else{
-                return successResponse(res, 200, 'No record found.', true, { ad, totalAds });
-            }
-        } catch (error) {
-            return failedResponse(res, 400, 'Unable to search record.', false);
-        }
-}
+  
+    const addressRegex = new RegExp(address, "i");
+    const titleRegex = new RegExp(title, "i");
+  
+    const skip = (page - 1) * 10;
+    try {
+      let query = {};
+  
+      if (!isNullOrNullOrEmpty(category)) {
+        query.category = category;
+      }
+  
+      if (!isNullOrNullOrEmpty(subCategory)) {
+        query.subCategory = subCategory;
+      }
+  
+      if (!isNullOrNullOrEmpty(address)) {
+        query.address = addressRegex;
+      }
+  
+      if (!isNullOrNullOrEmpty(title)) {
+        query.title = titleRegex;
+      }
+  
+      const ad = await Ad.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(10);
+      const totalAds = await Ad.find(query).count();
+  
+      if (totalAds > 0) {
+        return successResponse(res, 200, "All records are sent.", true, {
+          ad,
+          totalAds,
+        });
+      } else {
+        return successResponse(res, 200, "No record found.", true, {
+          ad,
+          totalAds,
+        });
+      }
+    } catch (error) {
+      return failedResponse(res, 400, "Unable to search record.", false);
+    }
+  };
 
 const fetchFeaturedAds = async (req, res) => {
     try {
