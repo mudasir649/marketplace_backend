@@ -370,8 +370,6 @@ export {
     deleteAd,
     toggleFavorite,
     filterSearch,
-    motorcycles,
-    BikesSubCategory,
     findModels,
     findVehicleMake,
     findVehicleSubCategory,
