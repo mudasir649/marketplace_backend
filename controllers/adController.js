@@ -25,9 +25,12 @@ const fetchTopAds = async(req, res) => {
 
 const fetchAllAds = async (req, res) => {
     function isNullOrNullOrEmpty(value) {
-      return value === null || value === undefined || value === "",value === "undefined";
+      return value === null || value === undefined || value === "";
     }
-    const { address, category, subCategory, title, page } = req.query;
+    const { address, category, subCategory, title, page,condition, brand, minPrice, maxPrice, sortBy } = req.query;
+
+    console.log(page);
+    console.log(sortBy);
   
     const addressRegex = new RegExp(address, "i");
     const titleRegex = new RegExp(title, "i");
@@ -35,25 +38,37 @@ const fetchAllAds = async (req, res) => {
     const skip = (page - 1) * 10;
     try {
       let query = {};
+      let sortOptions = {};
   
-      if (!isNullOrNullOrEmpty(category)) {
-        query.category = category;
-      }
+    if (!isNullOrNullOrEmpty(category)) query.category = category;
+    if (!isNullOrNullOrEmpty(subCategory)) query.subCategory = subCategory;
+    if (!isNullOrNullOrEmpty(address)) query.address = addressRegex;
+    if (!isNullOrNullOrEmpty(title)) query.title = titleRegex;
+    if(!isNullOrNullOrEmpty(condition)) query.condition = condition;
+    if(!isNullOrNullOrEmpty(brand)) query.brand = brand;
+    if(!isNullOrNullOrEmpty(minPrice)) query.price = { $lte: minPrice }
+    if(!isNullOrNullOrEmpty(maxPrice)) query.price = { $gte: maxPrice }
+    if(!isNullOrNullOrEmpty(maxPrice) && !isNullOrNullOrEmpty(minPrice)) query.price = { $gte: maxPrice, $lte: minPrice }
   
-      if (!isNullOrNullOrEmpty(subCategory)) {
-        query.subCategory = subCategory;
-      }
-  
-      if (!isNullOrNullOrEmpty(address)) {
-        query.address = addressRegex;
-      }
-  
-      if (!isNullOrNullOrEmpty(title)) {
-        query.title = titleRegex;
-      }
-  
+    switch (sortBy) {
+        case 'A to Z (title)':
+            sortOptions = { title: 1 }
+            break;
+        case 'Z to A (title)':
+            sortOptions = { title: -1 }
+            break;
+        case 'Price (low to high)':
+            sortOptions = { price: 1 }
+            break;
+        case 'Price (high to low)':
+            sortOptions = { price: -1 }
+            break;    
+        default:
+            sortOptions = { createdAt: -1 }
+            break;
+    }
       const ad = await Ad.find(query)
-        .sort({ createdAt: -1 })
+        .sort(sortOptions)
         .skip(skip)
         .limit(10);
       const totalAds = await Ad.find(query).count();
@@ -139,84 +154,6 @@ const deleteAd = async(req, res) => {
     }
 }
 
-const filterSearch = async(req, res) => {
-        const { address, category, subCategory, title, page } = req.query;
-    
-        const addressRegex = new RegExp(address, "i");
-        const titleRegex = new RegExp(title, "i");
-    
-        const skip = (page - 1) * 10;
-        try {
-            let query = {};
-            if(category){
-                query = { category };
-            }else if(subCategory){
-                query = { subCategory }
-            }else if(address && title){
-                query = { address: addressRegex, title: titleRegex }
-            }else if(address){
-                query = { address: addressRegex }
-            }else if(title){
-                query = { title: titleRegex }
-            }
-
-            const ad = await Ad.find(query).sort({ createdAt: -1 }).skip(skip).limit(10);
-            const totalAds = await Ad.find(query).count();
-
-            if(totalAds > 0){
-                return successResponse(res, 200, 'All records are sent.', true, { ad, totalAds });
-            }else{
-                return successResponse(res, 200, 'No record found.', true);
-            }
-        } catch (error) {
-            return failedResponse(res, 400, 'Unable to search record.', false);
-        }
-    }
-
-const advanceSearchFilter = async(req, res) => {
-    const { condition, brand, minPrice, maxPrice, page, sortBy } = req.query;
-    const skip = (page - 1) * 10;
-
-    let query = {};
-
-    if(condition) query.condition = condition;
-    if(brand) query.brand = brand;
-    if(minPrice !== '' && maxPrice == ''){
-        query.price = { $lte: minPrice }
-    }else if(maxPrice !== '' && minPrice == ''){
-        query.price = { $gte: maxPrice }
-    }else if(maxPrice !== '' && minPrice !== ''){
-        query.price = { $gte: maxPrice, $lte: minPrice }
-    }
-
-    if(sortBy == 'A to Z (title)'){
-        const ad = await Ad.find().sort({ title: 1 }).skip(skip).limit(10);
-        const totalAds = await Ad.find().count();
-        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds }); 
-    }else if(sortBy == 'Z to A (title)'){
-        const ad = await Ad.find().sort({ title: -1 }).skip(skip).limit(10);
-        const totalAds = await Ad.find().count();
-        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds }); 
-    }else if(sortBy == 'Price (low to high)'){
-        const ad = await Ad.find().sort({ price: 1 }).skip(skip).limit(10);
-        const totalAds = await Ad.find().count();
-        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds }); 
-    }else if(sortBy == 'Price (high to low)'){
-        const ad = await Ad.find().sort({ price: -1 }).skip(skip).limit(10);
-        const totalAds = await Ad.find().count();
-        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds }); 
-    }else if(Object.keys(query).length == 0){
-        const ad = await Ad.find().sort({ createdAt: 1 }).skip(skip).limit(10);
-        const totalAds = await Ad.find().count();
-        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds });   
-    }else{
-        const ad = await Ad.find(query).sort({ createdAt: -1 }).skip(skip).limit(10);
-        const totalAds = await Ad.find(query).count();
-        return successResponse(res, 200, 'Record is retrieved successfully.', true, { ad, totalAds });   
-    }
-}
-
-
 const toggleFavorite = async (req, res) => {
     const userId = req.body.userId; // Assuming userId is in the request body
     const adId = req.params.id; // Assuming the adId is in the request params
@@ -250,39 +187,6 @@ const toggleFavorite = async (req, res) => {
     }
   };
   
-
-
-const deleteFromfavorite = async(req, res) => {
-    const data = req.body;
-    try {
-        const removeFav = await FavoriteAd.findByIdAndDelete({_id: req.params.id});
-        const updatedUser = await User.findByIdAndUpdate(
-            data.userId,
-            { $pull: { favAdIds: req.params.id } },
-            { new: true }
-          );
-        return successResponse(res, 204, 'rmeoved from favorite', true);
-    } catch (error) {
-        return failedResponse(res, 500, 'unable to remove from favorite.', false);
-    }
-}
-
-const busses = async(req, res) => {
-    const bus = await Trailer.create(req.body);
-    return successResponse(res, 201, 'construction machine is created successfully.', true, bus );
-}
-
-
-const BikesSubCategory = async (req, res) => {
-    const bikesSub = await BikesSubcategory.create(req.body);
-    return successResponse(res, 201, 'Bikes subcategory is created.', true,  bikesSub);
-}
-
-const motorcycles = async(req, res) => {
-    const motorcycle = await Motorcycles.create(req.body);
-    return successResponse(res, 201, 'motorcycle is created.', true, motorcycle );
-}
-
 const findModels = async(req, res) => {
     const { type, make } = req.params;
     if(type == 'Autos'){

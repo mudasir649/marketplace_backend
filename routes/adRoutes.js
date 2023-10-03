@@ -7,15 +7,9 @@ import {
   addView,
   getSpecificAd,
   deleteAd,
-  filterSearch,
-  motorcycles,
-  BikesSubCategory,
   findModels,
-  deleteFromfavorite,
-  busses,
   findVehicleMake,
   findVehicleSubCategory,
-  advanceSearchFilter,
   searchTitle,
   toggleFavorite,
 } from "../controllers/adController.js";
@@ -30,15 +24,9 @@ router
   .get("/getSpecific/:id", getSpecificAd)
   .patch("/addView", addView)
   .delete("/deleteAd/:id", deleteAd)
-  .post("/setFavorite/:id", toggleFavorite)
-  .get("/searchRecord", filterSearch)
-  .post("/bikesSubcategory", BikesSubCategory)
-  .post("/motorcycles", motorcycles)
+  .put("/setFavorite/:id", toggleFavorite)
   .get("/findModels/:type/:make", findModels)
   .get("/findVehicleMake/:type", findVehicleMake)
   .get("/findVehicleSubCategory/:type", findVehicleSubCategory)
-  .delete("/removeFavorite/:id", deleteFromfavorite)
-  .get("/advance-search-filter", advanceSearchFilter)
-  .post("/createBus", busses)
   .get("/search-title", searchTitle);
 export default router;
