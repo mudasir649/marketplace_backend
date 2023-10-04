@@ -16,7 +16,7 @@ import Drones from '../models/DronesModel.js';
 
 const fetchTopAds = async(req, res) => {
     try {
-        const ad = await Ad.find().sort({createdAt: -1}).limit(4);
+        const ad = await Ad.find().sort({createdAt: -1}).limit(3);
         return successResponse(res, 200, 'Top ads are sent successfully.', true, ad);
     } catch (error) {
         return failedResponse(res, 500, 'Unable to sent ads.', false);
@@ -150,9 +150,7 @@ const deleteAd = async(req, res) => {
 }
 
 const toggleFavorite = async (req, res) => {
-    const userId = req.body.userId; // Assuming userId is in the request body
-    const adId = req.params.id; // Assuming the adId is in the request params
-  
+    const { userId, adId } = req.params; // Assuming userId is in the request body
     try {
       // Check if the user exists and retrieve their favorites
       const user = await User.findById(userId);
@@ -167,7 +165,7 @@ const toggleFavorite = async (req, res) => {
         // Remove the ad from favorites
         const user = await User.findByIdAndUpdate(
             userId,
-            { $pull: { favAdIds: req.params.id } },
+            { $pull: { favAdIds: adId } },
             { new: true }
           );
         return successResponse(res, 200, 'Favorite removed successfully.', true, user);

@@ -24,7 +24,7 @@ router
   .get("/getSpecific/:id", getSpecificAd)
   .patch("/addView", addView)
   .delete("/deleteAd/:id", deleteAd)
-  .put("/setFavorite/:id", toggleFavorite)
+  .put("/setFavorite/:adId/:userId", toggleFavorite)
   .get("/findModels/:type/:make", findModels)
   .get("/findVehicleMake/:type", findVehicleMake)
   .get("/findVehicleSubCategory/:type", findVehicleSubCategory)
