@@ -63,8 +63,8 @@ const removeFavorite = async (req, res) => {
 
 const getUserAds = async(req, res) => {
   try {
-    const getAds = await User.findById({ _id: req.params.id });
-    const ads = await getAds.populate('adIds');
+    const getUserAds = await User.findById({ _id: req.params.id }).populate('adIds');
+    const ads = getUserAds.adIds.sort((a,b) => b.createdAt - a.createdAt);
     return successResponse(res, 200, 'All user ads are sent.', true, ads)
   } catch (error) {
     return failedResponse(res, 500, 'unable to get ads', false);
@@ -75,18 +75,9 @@ const getFavroiteAds = async(req, res) => {
   try {
     const user = await User.findById({ _id: req.params.id }).select('favAdIds');
     const favAds = await user.populate('favAdIds');
-    let allFavAds = favAds?.favAdIds;
-    // const favAdsArr = [];
-    // for (let i = 0; i < allFavAds.length; i++) {
-    //   const adId = allFavAds[i].adId;
-    //   const ad = await Ad.findById(adId);
-    //   if(ad){
-    //     const adObject = ad.toObject();
-    //     adObject.favAdId = allFavAds[i]._id;
-    //     favAdsArr.push(adObject);
-    //   }
-    // }
-    return successResponse(res, 200, 'favorite ads of user is sent successfully.', true, allFavAds);
+    // Sort favorite ads based on creation date in descending order (latest first)
+    const sortedFavAds = favAds?.favAdIds.sort((a, b) => b.createdAt - a.createdAt);
+    return successResponse(res, 200, 'favorite ads of user is sent successfully.', true, sortedFavAds);
   } catch (error) {
     return failedResponse(res, 500, 'unable to get favorite ads', false);
   }
