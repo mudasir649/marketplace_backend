@@ -8,6 +8,9 @@ import fileUpload from 'express-fileupload';
 import dbConnection from './utils/dbConnection.js'
 import adRoutes from './routes/adRoutes.js';
 import googleRoutes from './routes/googleRoutes.js';
+import chatRoutes from './routes/firebaseRoute.js';
+// import admin from "firebase-admin";
+// import serviceAccount from './fireBase.js';
 
 const app = express();
 
@@ -29,9 +32,26 @@ app.use(async (req, res, next) => {
     next();
 });
 
+// Firebase
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL:
+//         "https://eidcarosse-7d282-default-rtdb.europe-west1.firebasedatabase.app/",
+// });
+// const database = admin.database();
+
+// database.ref(".info/connected").on("value", (snapshot) => {
+//     if (snapshot.val() === true) {
+//         console.log("Connected to Firebase");
+//     } else {
+//         console.log("Disconnected from Firebase");
+//     }
+// });
+
 app.use('/googleRoutes', googleRoutes)
 app.use('/auth', authRoutes);
 app.use('/ad', adRoutes)
+app.use('/chatroom', chatRoutes);
 
 const PORT = process.env.BACK_END_PORT || 4000;
 
