@@ -56,6 +56,16 @@ const logout = (req, res) => {
         )
 }
 
+const getUser = async(req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    return successResponse(res, 200, 'user is retrieved successfully.', true, user);
+  } catch (error) {
+    return failedResponse(res, 500, 'failed to get user.', false);
+  }
+}
+
 const removeFavorite = async (req, res) => {
   const ad = await User.findByIdAndUpdate({ _id: req.params.id }, { $set: { favAdIds: [] } }, { new: true });
   return successResponse(res, 200, 'favorite removed successfully.', true, ad);
@@ -151,5 +161,6 @@ export {
     getUserAds,
     getFavroiteAds,
     removeFavorite,
-    sendEmail
+    sendEmail,
+    getUser
 }
