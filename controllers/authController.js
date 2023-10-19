@@ -94,15 +94,18 @@ const getFavroiteAds = async(req, res) => {
 }
 
 const updateProfile = async (req, res) => {
+  function isNullOrNullOrEmpty(value) {
+    return value === null || value === undefined || value === "";
+  }
   const { firstName, lastName, phoneNumber } = req.body;
   const userId = req.params.id;
 
   try {
     const updates = {};
 
-    if (firstName !== undefined) updates.firstName = firstName;
-    if (lastName !== undefined) updates.lastName = lastName;
-    if (phoneNumber !== undefined) updates.phoneNumber = phoneNumber;
+    if (!isNullOrNullOrEmpty(firstName)) updates.firstName = firstName;
+    if (!isNullOrNullOrEmpty(lastName)) updates.lastName = lastName;
+    if (!isNullOrNullOrEmpty(phoneNumber)) updates.phoneNumber = phoneNumber;
 
     if (req.files) {
       const image = await uploadSingleImage(req.files.file);
