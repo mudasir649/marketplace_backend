@@ -1,7 +1,6 @@
 import Ad from '../models/AdModel.js';
 import BikesSubcategory from '../models/BikesSubcategory.js';
 import Cars from '../models/CarsModel.js';
-import FavoriteAd from '../models/FavoriteAdModel.js';
 import Motorcycles from '../models/MotorcycleModel.js';
 import User from '../models/UserModel.js';
 import Van from '../models/VanModel.js';
@@ -63,10 +62,22 @@ const fetchAllAds = async (req, res) => {
             sortOptions = { createdAt: -1 }
             break;
     }
-        const ad = await Ad.find(query)
-        .sort(sortOptions)
-        .skip(skip)
-        .limit(10);
+
+        const ad = await Ad.aggregate([
+            {
+                $match: query
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: 10
+            },
+            {
+                $sort: sortOptions
+            }
+        ]);
+
       const totalAds = await Ad.find(query).count();
       if (totalAds > 0) {
         return successResponse(res, 200, "All records are sent.", true, {
@@ -280,7 +291,7 @@ const findVehicleMake = async(req, res) => {
                 }
             }
             return successResponse(res, 200, 'motorcycle make is sent.', true, { make: trucksArr} );
-        }else if(type === "Construction Machine"){
+        }else if(type === "Construction Machines"){
             const constructionMachine = await ConstructionMachine.find().select('make');
             let cnArr = []
             for (let i = 0; i < constructionMachine.length; i++) {
@@ -329,7 +340,7 @@ const findVehicleSubCategory = async(req, res) => {
         }else if(type === "Trucks"){
             const trucks = await Truck.find().select('category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, trucks );
-        }else if(type === "Construction Machine"){
+        }else if(type === "Construction Machines"){
             const constructionMachine = await ConstructionMachine.find().select('category');
             return successResponse(res, 200, 'motorcycle make is sent.', true, constructionMachine );
         }else{
