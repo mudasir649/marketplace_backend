@@ -31,7 +31,7 @@ router.post('/', async(req, res) => {
     try {
         // For each userId, add the chatroomId to their room list (if not already present)
         for (const userId of users) {
-            const userRoomsRef = database.ref(`RoomLists/${userId}/rooms`);
+            const userRoomsRef = database.ref(`users/${userId}/rooms`);
             const snapshot = await userRoomsRef.once("value");
             const userRooms = snapshot.val() || [];
 
