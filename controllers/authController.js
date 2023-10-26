@@ -151,10 +151,40 @@ const sendEmail = async (req, res) => {
       return failedResponse(res, 400, 'Email is not sent', false);
     }
   }
+
 };
+const changePassword=async (req, res) => {
+  const { userId } = req.params;
+  const { oldPassword, newPassword } = req.body;
 
 
+  try {
+    
+      const user = await User.findById(userId).select('+password');
 
+      if (!user) {
+          return failedResponse(res, 404, 'User not found', false);
+      }
+
+      // Check if the old password matches
+      const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+      if (!isPasswordValid) {
+          return failedResponse(res, 400, 'Old password is incorrect', false);
+      }
+
+      // Hash the new password
+      const hash = await bcrypt.genSalt(10);
+      const encryptedPassword = await bcrypt.hash(newPassword, hash);
+
+      // Update the user's password
+      user.password = encryptedPassword;
+      await user.save();
+
+      return successResponse(res, 200, 'Password changed successfully', true);
+  } catch (error) {
+      return failedResponse(res, 500, 'Unable to change password', false);
+  }
+}
 
 export {
     register,
@@ -165,5 +195,6 @@ export {
     getFavroiteAds,
     removeFavorite,
     sendEmail,
-    getUser
+    getUser,
+    changePassword,
 }
