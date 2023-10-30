@@ -62,21 +62,22 @@ const fetchAllAds = async (req, res) => {
             sortOptions = { createdAt: -1 }
             break;
     }
-
         const ad = await Ad.aggregate([
+            {
+                $sort: sortOptions
+            },
             {
                 $match: query
             },
+            
             {
                 $skip: skip
             },
             {
                 $limit: 10
-            },
-            {
-                $sort: sortOptions
             }
         ]);
+
 
       const totalAds = await Ad.find(query).count();
       if (totalAds > 0) {
@@ -106,6 +107,12 @@ const fetchFeaturedAds = async (req, res) => {
 
 const createAd = async (req, res) => {
     const { file } = req.files;
+    const data = req.body;
+
+
+    console.log(data);
+
+    return 'this is working.'
     
     try {
         if(file.length > 1){
