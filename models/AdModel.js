@@ -60,7 +60,6 @@ const AdSchema = new mongoose.Schema({
     },
     website: {
         type: String,
-        default: null
     },
     address: {
         type: String,
