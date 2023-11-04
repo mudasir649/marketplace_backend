@@ -10,12 +10,12 @@ import {
   getUser,
   changePassword,
 } from "../controllers/authController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { protect, validateRegister } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router
   .post("/", login)
-  .post("/register", register)
+  .post("/register", validateRegister , register)
   .post("/logout", logout)
   .put("/userProfile/:id", updateProfile)
   .get("/getUserAds/:id", getUserAds)
