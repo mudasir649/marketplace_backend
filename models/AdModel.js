@@ -60,6 +60,7 @@ const AdSchema = new mongoose.Schema({
     },
     website: {
         type: String,
+        default: null
     },
     address: {
         type: String,
@@ -102,7 +103,7 @@ const AdSchema = new mongoose.Schema({
         default: null
     },
     km: {
-        type: Number,
+        type: String,
         default: null
     },
     axeltype: {

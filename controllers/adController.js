@@ -86,7 +86,6 @@ const fetchAllAds = async (req, res) => {
 
     console.log(query);
 
-
     const ad = await Ad.find(query).sort(sortOptions).skip(skip).limit(10);
     const totalAds = await Ad.find(query).count();
     if (totalAds > 0) {
@@ -116,7 +115,6 @@ const fetchFeaturedAds = async (req, res) => {
 
 const createAd = async (req, res) => {
   const { file } = req.files;
-
   try {
     if (file.length > 1) {
       const data = req.body;
@@ -270,8 +268,6 @@ const findModels = async (req, res) => {
 
 const findVehicleMake = async (req, res) => {
   const type = req.params.type;
-
-  console.log(type);
 
   if (type === "Autos") {
     let carArr = [];
