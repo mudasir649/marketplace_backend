@@ -156,8 +156,6 @@ const sendEmail = async (req, res) => {
 const changePassword=async (req, res) => {
   const { userId } = req.params;
   const { oldPassword, newPassword } = req.body;
-
-
   try {
     
       const user = await User.findById(userId).select('+password');
@@ -179,7 +177,6 @@ const changePassword=async (req, res) => {
       // Update the user's password
       user.password = encryptedPassword;
       await user.save();
-
       return successResponse(res, 200, 'Password changed successfully', true);
   } catch (error) {
       return failedResponse(res, 500, 'Unable to change password', false);

@@ -26,6 +26,23 @@ const validateRegister = async(req, res, next) => {
     });
 }
 
+const changePasswordValidate = async (req, res , next) => {
+  const userValidationRules = [
+    body('oldPassword').isString().isLength({ min: 8 }),
+    body('newPassword').isString().isLength({ min: 8 }),
+    body('confirmPassword').isString().isLength({ min: 8 }),
+  ];
+
+  Promise.all(userValidationRules.map((validationRule) => validationRule.run(req)))
+    .then(() => {
+      const errors = validationResult(req);
+      if(!errors.isEmpty()){
+        return res.status(400).json({ errors: errors.array() });
+      }
+      next();
+    })
+}
+
 const protect = async (req, res, next) => {
   let token;
 
@@ -49,4 +66,4 @@ const protect = async (req, res, next) => {
   }
 };
 
-export { protect, validateRegister };
+export { protect, validateRegister, changePasswordValidate };

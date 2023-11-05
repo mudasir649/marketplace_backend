@@ -10,7 +10,7 @@ import {
   getUser,
   changePassword,
 } from "../controllers/authController.js";
-import { protect, validateRegister } from "../middleware/authMiddleware.js";
+import { changePasswordValidate, protect, validateRegister } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router
@@ -22,6 +22,6 @@ router
   .get("/getFavAds/:id", getFavroiteAds)
   .get("/getUser/:userId", getUser)
   .post("/send-email", sendEmail)
-  .post("/change-password/:userId", changePassword);
+  .post("/change-password/:userId", changePasswordValidate, changePassword);
 
 export default router;
