@@ -23,7 +23,7 @@ const uploadSingleImage = async (files) => {
       if (error) {
         reject(error);
       } else {
-        resolve(result.url);
+        resolve(result.secure_url);
       }
     }).end(imageBuffer);
   })
