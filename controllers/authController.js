@@ -1,13 +1,12 @@
 import User from "../models/UserModel.js";
 import { failedResponse, successResponse } from "../utils/response.js";
 import generateToken from "../utils/generateJWT.js";
-import bcrypt from "bcrypt";
+import bcrypt, { genSalt } from "bcrypt";
 import { uploadMultipleImage, uploadSingleImage } from '../utils/uploadImage.js';
-import Ad from "../models/AdModel.js";
-import Sib from "sib-api-v3-sdk";
 import userEmail from "../utils/email.js";
-
-
+import generateRandomCode from "../utils/generateRandomCode.js";
+import { sendEmailReset } from "../utils/passwordResetEmail.js";
+import ResetPassword from "../models/ResetPassModel.js";
 
 const login = async(req, res) => {
     const { email, password } = req.body;
@@ -127,7 +126,6 @@ const updateProfile = async (req, res) => {
 
 const sendEmail = async (req, res) => {
   const { subject, message, email, fullName, make, model, year, description, phoneNo } = req.body;
-
   if(req.files === undefined){
     try {
       const sentEmail = await userEmail(subject, message, '', email);
@@ -183,6 +181,82 @@ const changePassword=async (req, res) => {
   }
 }
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({email});
+  try {
+    if(!user){
+      return failedResponse(res, 400, 'Provided email is not registered. Please! enter valid email', false);
+    }else{
+      const resetCode = await generateRandomCode();
+      const token = await generateToken(user._id, user?.email, user?.userName, req, res);
+      const resetModel = await ResetPassword.create({ resetCode, token });
+      await sendEmailReset(email, 'This is email for reset.', resetCode);
+      return successResponse(res, 200, 'email is sent successfully', true, token);
+    }
+  } catch (error) {
+    return failedResponse(res, 500, 'something went wrong.', false);
+  }
+}
+
+const checkToken = async (req, res) => {
+  const { token } = req.query;
+  const verifyToken = await ResetPassword.findOne({token: token});
+  try {
+    if(!verifyToken){
+      return failedResponse(res, 400, 'token doesn`t exist', false);
+    }else{
+      return successResponse(res, 200, 'token is verified.', true);
+    }
+  } catch (error) {
+    return failedResponse(res, 500, 'something went wrong.', false);
+  }
+}
+
+const verifyCode = async(req, res) => {
+  const { code } = req.params;
+  const verifyCode = await ResetPassword.findOne({ resetCode: code });
+  try {
+    if(!verifyCode){
+      return failedResponse(res, 400, 'code is not verified', false);
+    }else{
+      return successResponse(res, 200, 'code is verified successfully.', true);
+    }
+  } catch (error) {
+    return failedResponse(res, 500, 'something went wrong.', false)
+  }
+}
+
+const emptyToken = async (req, res) => {
+  const { token } = req.query;
+  try {
+    await ResetPassword.findOneAndDelete({ token })
+    return successResponse(res, 200, 'user token and code is expired.', true)
+  } catch (error) {
+    return failedResponse(res, 500, 'something went wrong.', false);
+  }
+}
+
+const resetPassword = async(req, res) => {
+  const { password, email, token } = req.body;
+  const user = await User.findOne({ email: email });
+
+  try {
+    if(!user){
+      return failedResponse(res, 400, 'User with the provided doesn`t exists.', false);
+    }
+    const hash = await genSalt(10);
+    const encryptedPassword = await bcrypt.hash(password, hash);
+    user.password = encryptedPassword;
+    await user.save();
+    await ResetPassword.findOneAndDelete({ token });
+    return successResponse(res, 200, `${email} password reset successfully.`, true);
+  } catch (error) {
+    return failedResponse(res, 500, 'something wrong.', false);
+  }
+
+}
+
 export {
     register,
     login,
@@ -194,4 +268,9 @@ export {
     sendEmail,
     getUser,
     changePassword,
+    forgotPassword,
+    checkToken,
+    emptyToken,
+    verifyCode,
+    resetPassword
 }

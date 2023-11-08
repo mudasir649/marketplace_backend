@@ -18,7 +18,7 @@ import Drones from "../models/DronesModel.js";
 
 const fetchTopAds = async (req, res) => {
   try {
-    const ad = await Ad.find().sort({ createdAt: -1 }).limit(3);
+    const ad = await Ad.find().sort({ createdAt: -1 }).limit(10);
     return successResponse(
       res,
       200,

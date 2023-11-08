@@ -4,10 +4,9 @@ async function userEmail(subject, message, image, email, fullName, make, model, 
 
     const client = Sib.ApiClient.instance
     const apiKey = client.authentications['api-key']
-    apiKey.apiKey = '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';
+    apiKey.apiKey = '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';
 
     const transEmail = new Sib.TransactionalEmailsApi();
-
     let transportEmail;
 
     const sender = {
@@ -80,6 +79,27 @@ async function userEmail(subject, message, image, email, fullName, make, model, 
             console.log(error);
         }    
     }else{
+        transportEmail = await transEmail.sendTransacEmail({
+            sender,
+            to: receiver,
+            subject: subject,
+            textContent: 'This is the body of the message.',
+            htmlContent: `<h1>Contact Us.</h1>
+            <p>${message}</p>
+            <h2>email sent by ${email}</h2>
+            `,
+            params: {
+                role: 'Frontend'
+            }
+        });
+
+        console.log(transportEmail);
+
+        const result = transportEmail;
+
+        console.log(result);
+
+        return result;
         try {
             transportEmail = await transEmail.sendTransacEmail({
                 sender,

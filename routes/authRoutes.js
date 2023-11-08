@@ -9,6 +9,11 @@ import {
   sendEmail,
   getUser,
   changePassword,
+  forgotPassword,
+  checkToken,
+  emptyToken,
+  verifyCode,
+  resetPassword
 } from "../controllers/authController.js";
 import { changePasswordValidate, protect, validateRegister } from "../middleware/authMiddleware.js";
 const router = express.Router();
@@ -22,6 +27,11 @@ router
   .get("/getFavAds/:id", getFavroiteAds)
   .get("/getUser/:userId", getUser)
   .post("/send-email", sendEmail)
-  .post("/change-password/:userId", changePasswordValidate, changePassword);
+  .post("/change-password/:userId", changePasswordValidate, changePassword)
+  .post("/forgot-password", forgotPassword)
+  .get("/checkToken", checkToken).
+  get("/verify-code/:code", verifyCode).
+  post("/reset-password", resetPassword).
+  get("/empty-token", emptyToken);
 
 export default router;
