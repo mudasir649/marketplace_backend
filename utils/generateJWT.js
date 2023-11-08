@@ -1,8 +1,19 @@
 import jwt from "jsonwebtoken";
 
+const generateRandomToken = async () => {
+    const characters = process.env.BACKEND_JWT_SECRET;
+    let randomString = '';
+    for (let i = 0; i <= 20; i++) {
+        const string = Math.floor(Math.random() * characters.length);
+        randomString += characters.charAt(string); 
+    }
+    return randomString;
+}
+
 
 const signedToken = async (userId, email, username) => {
-    return jwt.sign({userId, email, username}, process.env.BACKEND_JWT_SECRET, {
+    const generateRandom = await generateRandomToken(); 
+    return jwt.sign({userId, email, username}, generateRandom, {
         expiresIn: '30d'
     });
 }

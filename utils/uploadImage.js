@@ -16,6 +16,7 @@ const uploadSingleImage = async (files) => {
   const imageBuffer = files.data;
   const uploadOptions = {
     resource_type: 'image',
+    secure: true
   };
 
   return new Promise((resolve, reject) => {
