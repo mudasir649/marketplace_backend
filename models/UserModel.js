@@ -31,14 +31,6 @@ const UserSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
     },
-    resetCode: {
-        type: String,
-        default: null,
-    },
-    token: {
-        type: String,
-        default: null
-    },
     verified: {
         type: Boolean,
         default: false
