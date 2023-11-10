@@ -13,7 +13,8 @@ import {
   checkToken,
   emptyToken,
   verifyCode,
-  resetPassword
+  resetPassword,
+  verifyAccount
 } from "../controllers/authController.js";
 import { changePasswordValidate, protect, validateRegister } from "../middleware/authMiddleware.js";
 const router = express.Router();
@@ -32,6 +33,7 @@ router
   .get("/checkToken", checkToken).
   get("/verify-code/:code", verifyCode).
   post("/reset-password", resetPassword).
-  get("/empty-token", emptyToken);
+  get("/empty-token", emptyToken).
+  post("/verify-account", verifyAccount);
 
 export default router;

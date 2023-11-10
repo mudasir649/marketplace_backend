@@ -6,15 +6,25 @@ import { uploadMultipleImage, uploadSingleImage } from '../utils/uploadImage.js'
 import userEmail from "../utils/email.js";
 import generateRandomCode from "../utils/generateRandomCode.js";
 import { sendEmailReset } from "../utils/passwordResetEmail.js";
-import ResetPassword from "../models/ResetPassModel.js";
+import OTP from "../models/OTPModel.js";
 
 const login = async(req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select('password');
     if (user && (await bcrypt.compare(password, user.password))) {
+      // userDetails variable is created because in this variable it will store all values of 
+      // user except password and returned to the user
       const userDetails = await User.findOne({ email });
-      const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
-      return successResponse(res, 200, 'You are loggedin.', true, {token, userDetails});
+      if(userDetails.verified === true){
+        const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
+        return successResponse(res, 200, 'You are loggedin.', true, {token, userDetails});
+      }else{
+        const resetCode = await generateRandomCode();
+        const token = await generateToken(userDetails?._id, userDetails?.email, userDetails?.userName, req,res);
+        await OTP.create({ resetCode, token });
+        await sendEmailReset(email, 'This is email for reset.', resetCode);
+        return successResponse(res, 400, 'Account is registered but not verified', false, token);
+      }
     } else {
       return failedResponse(res, 401, 'Invalid email or password.', false);
     }
@@ -36,7 +46,10 @@ const register = async(req, res) => {
         const encryptedPassword = await bcrypt.hash(password, hash);
         const userDetails = await User.create({firstName, lastName, email, phoneNumber, userName, password: encryptedPassword});
         if(userDetails){
+            const resetCode = await generateRandomCode();
             const token = await generateToken(userDetails?._id, userDetails?.email, userDetails?.userName, req,res);
+            await OTP.create({ resetCode, token });
+            await sendEmailReset(email, 'This is email for reset.', resetCode);
             return successResponse(res, 201, 'user created successfully.', true, { token, userDetails}); 
         }
     } catch (error) {
@@ -190,7 +203,7 @@ const forgotPassword = async (req, res) => {
     }else{
       const resetCode = await generateRandomCode();
       const token = await generateToken(user._id, user?.email, user?.userName, req, res);
-      const resetModel = await ResetPassword.create({ resetCode, token });
+      const resetModel = await OTP.create({ resetCode, token });
       await sendEmailReset(email, 'This is email for reset.', resetCode);
       return successResponse(res, 200, 'email is sent successfully', true, token);
     }
@@ -201,7 +214,7 @@ const forgotPassword = async (req, res) => {
 
 const checkToken = async (req, res) => {
   const { token } = req.query;
-  const verifyToken = await ResetPassword.findOne({token: token});
+  const verifyToken = await OTP.findOne({token: token});
   try {
     if(!verifyToken){
       return failedResponse(res, 400, 'token doesn`t exist', false);
@@ -215,7 +228,7 @@ const checkToken = async (req, res) => {
 
 const verifyCode = async(req, res) => {
   const { code } = req.params;
-  const verifyCode = await ResetPassword.findOne({ resetCode: code });
+  const verifyCode = await OTP.findOne({ resetCode: code });
   try {
     if(!verifyCode){
       return failedResponse(res, 400, 'code is not verified', false);
@@ -230,7 +243,7 @@ const verifyCode = async(req, res) => {
 const emptyToken = async (req, res) => {
   const { token } = req.query;
   try {
-    await ResetPassword.findOneAndDelete({ token })
+    await OTP.findOneAndDelete({ token })
     return successResponse(res, 200, 'user token and code is expired.', true)
   } catch (error) {
     return failedResponse(res, 500, 'something went wrong.', false);
@@ -249,10 +262,32 @@ const resetPassword = async(req, res) => {
     const encryptedPassword = await bcrypt.hash(password, hash);
     user.password = encryptedPassword;
     await user.save();
-    await ResetPassword.findOneAndDelete({ token });
+    await OTP.findOneAndDelete({ token });
     return successResponse(res, 200, `${email} password reset successfully.`, true);
   } catch (error) {
     return failedResponse(res, 500, 'something wrong.', false);
+  }
+}
+
+const verifyAccount = async (req, res) => {
+  const { code, email, token1 } = req.body;
+  const verifyCode = await OTP.findOne({ resetCode: code });
+  try {
+    if(!verifyCode){
+      return failedResponse(res, 400, 'Code is not verified.', false);
+    }else{
+      const user = await User.findOne({ email });
+      user.verified = true;
+      await user.save();
+      if(user.verified === true){
+        console.log(user);
+        const token = await generateToken(user?._id, user?.email, user?.userName, req,res);
+        await OTP.findOneAndDelete({ token: token1 });
+        return successResponse(res, 200, `${email} get's verified successfully`, true, { token, userDetails:user });
+      }
+    }
+  } catch (error) {
+    return failedResponse(res, 500, 'something went wrong.', false)
   }
 
 }
@@ -272,5 +307,6 @@ export {
     checkToken,
     emptyToken,
     verifyCode,
-    resetPassword
+    resetPassword,
+    verifyAccount
 }
