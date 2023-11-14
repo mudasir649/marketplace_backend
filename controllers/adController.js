@@ -300,7 +300,7 @@ const findVehicleMake = async (req, res) => {
     return successResponse(res, 200, "motorcycle make is sent.", true, {
       make: bikesSubArr,
     });
-  } else if (type === "E-Scooters") {
+  } else if (type === "E-scooter") {
     const bikesSubCat = await BikesSubcategory.find({
       category: "eScooters",
     }).select("make");
@@ -314,7 +314,7 @@ const findVehicleMake = async (req, res) => {
     return successResponse(res, 200, "motorcycle make is sent.", true, {
       make: bikesSubArr,
     });
-  } else if (type === "E-Bikes") {
+  } else if (type === "E-bikes") {
     const bikesSubCat = await BikesSubcategory.find({
       category: "eBikes",
     }).select("make");
