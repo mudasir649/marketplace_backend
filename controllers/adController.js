@@ -176,7 +176,6 @@ const createAd = async (req, res) => {
 
 const editAd = async (req, res) => {
   const { id } = req.params;
-  const data = req.body;
   const { file } = req.files;
 
   try {
