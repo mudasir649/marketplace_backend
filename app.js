@@ -22,7 +22,7 @@ app.use(cookieParser())
 dotenv.config({ path:".env" })
 
 // cors to allow cross origin access
-app.use(cors({ origin: true }));
+app.use(cors());
 app.options("*", cors());
   
 
