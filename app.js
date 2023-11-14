@@ -23,7 +23,7 @@ dotenv.config({ path:".env" })
 
 // cors to allow cross origin access
 app.use(cors());
-app.options("*", cors());
+//app.options("*", cors());
   
 
 //database connection
