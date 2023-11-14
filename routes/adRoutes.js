@@ -12,6 +12,7 @@ import {
   findVehicleSubCategory,
   searchTitle,
   toggleFavorite,
+  editAd,
 } from "../controllers/adController.js";
 import { checkValidId, validateRequestBody } from "../middleware/adMiddleware.js";
 
@@ -22,6 +23,7 @@ router
   .get("/fetchFeatured", fetchFeaturedAds)
   .get("/fetchTopAds", fetchTopAds)
   .post("/adPost", validateRequestBody, createAd)
+  .patch("/edit-ad/:id", editAd)
   .get("/getSpecific/:id", checkValidId, getSpecificAd)
   .patch("/addView", checkValidId, addView)
   .delete("/deleteAd/:id", deleteAd)
