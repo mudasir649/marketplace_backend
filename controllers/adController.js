@@ -174,6 +174,38 @@ const createAd = async (req, res) => {
   }
 };
 
+const editAd = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const { file } = req.files;
+
+  try {
+    if (file.length > 1) {
+      const data = req.body;
+      const imageData = await uploadMultipleImage(file);
+      data.images = imageData;
+      const ad = await Ad.updateOne({ _id: id }, data);
+      if (ad.modifiedCount === 1) {
+        return successResponse(res, 200, "Ad update successfully.", true);
+      } else {
+        return failedResponse(res, 404, "Unable to update ad.", false);
+      }
+    } else {
+      const data = req.body;
+      const imageData = await uploadSingleImage(file);
+      data.images = imageData;
+      const ad = await Ad.updateOne({ _id: id }, data);
+      if (ad.modifiedCount === 1) {
+        return successResponse(res, 200, "Ad update successfully.", true);
+      } else {
+        return failedResponse(res, 404, "Unable to update ad.", false);
+      }
+    }
+  } catch (error) {
+    return failedResponse(res, 500, "something went wrong.", false);
+  }
+};
+
 const getSpecificAd = async (req, res) => {
   try {
     const getUserAd = await Ad.findById({ _id: req.params.id });
@@ -248,13 +280,16 @@ const toggleFavorite = async (req, res) => {
 const findModels = async (req, res) => {
   const { type, make } = req.params;
   if (type == "Autos") {
-    const cars = await Cars.find({ make: make }).select("model").sort("model").maxTimeMS('20000');
+    const cars = await Cars.find({ make: make })
+      .select("model")
+      .sort("model")
+      .maxTimeMS("20000");
     return successResponse(res, 200, "car is created.", true, cars);
   } else if (type == "Motorcycle") {
     const motorcycle = await Motorcycles.find({ make: make })
       .select("model")
       .sort("model")
-      .maxTimeMS('20000');
+      .maxTimeMS("20000");
     return successResponse(
       res,
       200,
@@ -472,4 +507,5 @@ export {
   findVehicleMake,
   findVehicleSubCategory,
   searchTitle,
+  editAd,
 };
