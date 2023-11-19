@@ -67,6 +67,9 @@ const fetchAllAds = async (req, res) => {
       query.price = { $gte: maxPrice, $lte: minPrice };
 
     switch (sortBy) {
+      case "Old":
+        sortOptions = { createdAt: 1 };
+        break;
       case "A to Z (title)":
         sortOptions = { title: 1 };
         break;
@@ -84,6 +87,7 @@ const fetchAllAds = async (req, res) => {
         break;
     }
 
+    console.log(sortBy);
     console.log(query);
 
     const ad = await Ad.find(query).sort(sortOptions).skip(skip).limit(10);
