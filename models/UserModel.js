@@ -31,6 +31,12 @@ const UserSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
     },
+    whatsapp: {
+        type: String,
+    },
+    viber: {
+        type: String,
+    },
     verified: {
         type: Boolean,
         default: false
