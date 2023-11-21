@@ -439,8 +439,8 @@ const verifyAccount = async (req, res) => {
 const showNumber = async (req, res) => {
   try {
     // Find the user by ID
-    const userId = req.params.userId;
-    const user = await User.findById(userId);
+    const userId = req.params.id;
+    const user = await User.findById({ _id: req.params.id });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -462,8 +462,8 @@ const showNumber = async (req, res) => {
 const showAds = async (req, res) => {
   try {
     // Find the user by ID
-    const userId = req.params.userId;
-    const user = await User.findById(userId);
+    const userId = req.params.id;
+    const user = await User.findById({ _id: req.params.id });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
