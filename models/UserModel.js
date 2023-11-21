@@ -40,6 +40,14 @@ const UserSchema = new mongoose.Schema({
     verified: {
         type: Boolean,
         default: false
+    },
+    showNumber: {
+        type: Boolean,
+        default: false
+    },
+    showAds: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

@@ -14,7 +14,9 @@ import {
   emptyToken,
   verifyCode,
   resetPassword,
-  verifyAccount
+  verifyAccount,
+  showAds,
+  showNumber
 } from "../controllers/authController.js";
 import { changePasswordValidate, protect, validateRegister } from "../middleware/authMiddleware.js";
 const router = express.Router();
@@ -24,6 +26,8 @@ router
   .post("/register", validateRegister , register)
   .post("/logout", logout)
   .put("/userProfile/:id", updateProfile)
+  .put("/showAds/:id", showAds)
+  .put("/showNumber/:id", showNumber)
   .get("/getUserAds/:id", getUserAds)
   .get("/getFavAds/:id", getFavroiteAds)
   .get("/getUser/:userId", getUser)

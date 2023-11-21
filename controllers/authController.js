@@ -436,6 +436,52 @@ const verifyAccount = async (req, res) => {
     return failedResponse(res, 500, "something went wrong.", false);
   }
 };
+const showNumber = async (req, res) => {
+  try {
+    // Find the user by ID
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Toggle the showNumber field
+    user.showNumber = !user.showNumber;
+
+    // Save the updated user
+    await user.save();
+
+    // Respond with the updated user
+    res.json({ message: "Show number toggled successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+const showAds = async (req, res) => {
+  try {
+    // Find the user by ID
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Toggle the showAds field
+    user.showAds = !user.showAds;
+
+    // Save the updated user
+    await user.save();
+
+    // Respond with the updated user
+    res.json({ message: "Show ads toggled successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 export {
   register,
@@ -454,4 +500,6 @@ export {
   verifyCode,
   resetPassword,
   verifyAccount,
+  showAds,
+  showNumber
 };
