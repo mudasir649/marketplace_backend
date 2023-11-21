@@ -19,6 +19,7 @@ import Drones from "../models/DronesModel.js";
 const fetchTopAds = async (req, res) => {
   try {
     const ad = await Ad.find().sort({ createdAt: -1 }).limit(10);
+    
     return successResponse(
       res,
       200,
@@ -90,7 +91,8 @@ const fetchAllAds = async (req, res) => {
     console.log(sortBy);
     console.log(query);
 
-    const ad = await Ad.find(query).sort(sortOptions).skip(skip).limit(10);
+    const ad = await Ad.find(query).sort(sortOptions).skip(skip).limit(10).populate("userId");;
+
     const totalAds = await Ad.find(query).count();
     if (totalAds > 0) {
       return successResponse(res, 200, "All records are sent.", true, {
