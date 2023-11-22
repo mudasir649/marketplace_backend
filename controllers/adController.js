@@ -535,7 +535,7 @@ const refreshAd = async (req, res) => {
 
     const newAd = await Ad.create(ad1);
 
-      return successResponse(res, 200, "Ad timestamps updated.", true, {ad:newAd});
+      return successResponse(res, 200, "Ad timestamps updated.", true, newAd);
 
     }else{
       return failedResponse(res, 400, "Item was created within the last 15 seconds. 'createdAt' timestamp not refreshed.", false)
