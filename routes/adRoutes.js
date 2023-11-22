@@ -13,6 +13,7 @@ import {
   searchTitle,
   toggleFavorite,
   editAd,
+  refreshAd,
 } from "../controllers/adController.js";
 import { checkValidId, validateRequestBody } from "../middleware/adMiddleware.js";
 
@@ -31,5 +32,6 @@ router
   .get("/findModels/:type/:make", findModels)
   .get("/findVehicleMake/:type", findVehicleMake)
   .get("/findVehicleSubCategory/:type", findVehicleSubCategory)
-  .get("/search-title", searchTitle);
+  .get("/search-title", searchTitle)
+  .put('/refreshAd/:id', refreshAd);
 export default router;
