@@ -512,23 +512,30 @@ const refreshAd = async (req, res) => {
   try {
     const existingAd = await Ad.findById(id);
 
+    let ad1 = existingAd.toObject();
+    delete ad1._id;
+    delete ad1.createdAt;
+    delete ad1.updatedAt;
+
     if(!existingAd){
       return failedResponse(res, 400, 'No! record found.', false);
     }
+
 
     const timeDifference = new Date() - existingAd.createdAt;
     const secondsDifference = timeDifference / 1000;
 
     if(secondsDifference > 15){
+
       const deleteAd = await Ad.findByIdAndDelete(id);
 
       if(!deleteAd){
         return failedResponse(res, 400, 'Ad doesn`t exists.', false);
       }
 
-      const newAd = await Ad.create(deleteAd);
+    const newAd = await Ad.create(ad1);
 
-      return successResponse(res, 201, "Ad timestamps updated.", true, {ad:newAd});
+      return successResponse(res, 200, "Ad timestamps updated.", true, {ad:newAd});
 
     }else{
       return failedResponse(res, 400, "Item was created within the last 15 seconds. 'createdAt' timestamp not refreshed.", false)
