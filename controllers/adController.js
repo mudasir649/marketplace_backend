@@ -512,39 +512,38 @@ const refreshAd = async (req, res) => {
   try {
     const existingAd = await Ad.findById(id);
 
+    if (!existingAd) {
+      return failedResponse(res, 400, "No! record found.", false);
+    }
+
     let ad1 = existingAd.toObject();
     delete ad1._id;
     delete ad1.createdAt;
     delete ad1.updatedAt;
 
-    if(!existingAd){
-      return failedResponse(res, 400, 'No! record found.', false);
-    }
-
-
     const timeDifference = new Date() - existingAd.createdAt;
     const secondsDifference = timeDifference / 1000;
 
-    if(secondsDifference > 15){
-
+    if (secondsDifference > 15) {
       const deleteAd = await Ad.findByIdAndDelete(id);
 
-      if(!deleteAd){
-        return failedResponse(res, 400, 'Ad doesn`t exists.', false);
+      if (!deleteAd) {
+        return failedResponse(res, 400, "Ad doesn`t exists.", false);
       }
 
-    const newAd = await Ad.create(ad1);
+      const newAd = await Ad.create(ad1);
 
       return successResponse(res, 200, "Ad timestamps updated.", true, newAd);
-
-    }else{
-      return failedResponse(res, 400, "Item was created within the last 15 seconds. 'createdAt' timestamp not refreshed.", false)
+    } else {
+      return failedResponse(
+        res,
+        400,
+        "Item was created within the last 15 seconds. 'createdAt' timestamp not refreshed.",
+        false
+      );
     }
-
-  } catch (error) {
-    
-  }
-}
+  } catch (error) {}
+};
 
 export {
   fetchTopAds,
@@ -560,5 +559,5 @@ export {
   findVehicleSubCategory,
   searchTitle,
   editAd,
-  refreshAd
+  refreshAd,
 };
