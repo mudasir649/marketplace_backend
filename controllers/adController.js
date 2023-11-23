@@ -532,8 +532,10 @@ const refreshAd = async (req, res) => {
       }
 
       const newAd = await Ad.create(ad1);
+      await newAd.save();
+      const ads = await Ad.find({userId: ad1.userId});
 
-      return successResponse(res, 200, "Ad timestamps updated.", true, newAd);
+      return successResponse(res, 200, "Ad timestamps updated.", true, ads);
     } else {
       return failedResponse(
         res,

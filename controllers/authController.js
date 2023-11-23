@@ -10,6 +10,7 @@ import userEmail from "../utils/email.js";
 import generateRandomCode from "../utils/generateRandomCode.js";
 import { sendEmailReset } from "../utils/passwordResetEmail.js";
 import OTP from "../models/OTPModel.js";
+import Ad from "../models/AdModel.js";
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -145,10 +146,11 @@ const removeFavorite = async (req, res) => {
 
 const getUserAds = async (req, res) => {
   try {
-    const getUserAds = await User.findById({ _id: req.params.id }).populate(
-      "adIds"
-    );
-    const ads = getUserAds.adIds.sort((a, b) => b.createdAt - a.createdAt);
+    // const getUserAds = await User.findById({ _id: req.params.id }).populate(
+    //   "adIds"
+    // );
+    const getUserAds = await Ad.find({ userId: req.params.id });
+    const ads = getUserAds.sort((a, b) => b.createdAt - a.createdAt);
     return successResponse(res, 200, "All user ads are sent.", true, ads);
   } catch (error) {
     return failedResponse(res, 500, "unable to get ads", false);
