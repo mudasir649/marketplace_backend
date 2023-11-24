@@ -47,6 +47,8 @@ const fetchAllAds = async (req, res) => {
     page,
     condition,
     brand,
+    model,
+    year,
     minPrice,
     maxPrice,
     sortBy,
@@ -65,6 +67,8 @@ const fetchAllAds = async (req, res) => {
     if (!isNullOrNullOrEmpty(title)) query.title = titleRegex;
     if (!isNullOrNullOrEmpty(condition)) query.condition = condition;
     if (!isNullOrNullOrEmpty(brand)) query.brand = brand;
+    if (!isNullOrNullOrEmpty(model)) query.model = model;
+    if (!isNullOrNullOrEmpty(year)) query.year = year;
     if (!isNullOrNullOrEmpty(minPrice)) query.price = { $lte: minPrice };
     if (!isNullOrNullOrEmpty(maxPrice)) query.price = { $gte: maxPrice };
     if (!isNullOrNullOrEmpty(maxPrice) && !isNullOrNullOrEmpty(minPrice))
