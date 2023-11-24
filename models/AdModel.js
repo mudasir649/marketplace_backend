@@ -52,20 +52,17 @@ const AdSchema = new mongoose.Schema(
       default: null,
     },
     phone: {
-      type: Number,
-      default: null,
+      type: Boolean,
+      default: false,
     },
     whatsapp: {
-      type: Number,
-      default: null,
+      type: String,
     },
     viber: {
       type: Number,
-      default: null,
     },
     website: {
       type: String,
-      default: null,
     },
     address: {
       type: String,
