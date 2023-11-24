@@ -188,30 +188,84 @@ const createAd = async (req, res) => {
 };
 
 const editAd = async (req, res) => {
+  function isNullOrNullOrEmpty(value) {
+    return value === null || value === undefined || value === "";
+  }
   const { id } = req.params;
   const { file } = req.files;
 
+  const {
+    title,
+    category,
+    subCategory,
+    price,
+    condition,
+    brand,
+    videoUrl,
+    description,
+    phone,
+    whatsapp,
+    viber,
+    address,
+    model,
+    year,
+    bodyShape,
+    gearBox,
+    fuelType,
+    exteriorColor,
+    interiorColor,
+    engineCapacity,
+    cylinder,
+    km,
+    axelType,
+    latitude,
+    longitude,
+  } = req.body;
+  
+  const fieldToUpdate = {};
+
+  if (!isNullOrNullOrEmpty(title)) fieldToUpdate.title = title;
+  if (!isNullOrNullOrEmpty(category)) fieldToUpdate.category = category;
+  if (!isNullOrNullOrEmpty(subCategory)) fieldToUpdate.subCategory = subCategory;
+  if (!isNullOrNullOrEmpty(price)) fieldToUpdate.price = price;
+  if (!isNullOrNullOrEmpty(condition)) fieldToUpdate.condition = condition;
+  if (!isNullOrNullOrEmpty(brand)) fieldToUpdate.brand = brand;
+  if (!isNullOrNullOrEmpty(videoUrl)) fieldToUpdate.videoUrl = videoUrl;
+  if (!isNullOrNullOrEmpty(description)) fieldToUpdate.description = description;
+  if (!isNullOrNullOrEmpty(phone)) fieldToUpdate.phone = phone;
+  if (!isNullOrNullOrEmpty(whatsapp)) fieldToUpdate.whatsapp = whatsapp;
+  if (!isNullOrNullOrEmpty(viber)) fieldToUpdate.viber = viber;
+  if (!isNullOrNullOrEmpty(model)) fieldToUpdate.model = model;
+  if (!isNullOrNullOrEmpty(year)) fieldToUpdate.year = year;
+  if (!isNullOrNullOrEmpty(km)) fieldToUpdate.km = km;
+  if (!isNullOrNullOrEmpty(address)) fieldToUpdate.address = address;
+  if (!isNullOrNullOrEmpty(bodyShape)) fieldToUpdate.bodyShape = bodyShape;
+  if (!isNullOrNullOrEmpty(gearBox)) fieldToUpdate.gearBox = gearBox;
+  if (!isNullOrNullOrEmpty(fuelType)) fieldToUpdate.fuelType = fuelType;
+  if (!isNullOrNullOrEmpty(exteriorColor)) fieldToUpdate.exteriorColor = exteriorColor;
+  if (!isNullOrNullOrEmpty(interiorColor)) fieldToUpdate.interiorColor = interiorColor;
+  if (!isNullOrNullOrEmpty(engineCapacity)) fieldToUpdate.engineCapacity = engineCapacity;
+  if (!isNullOrNullOrEmpty(cylinder)) fieldToUpdate.cylinder = cylinder;
+  if (!isNullOrNullOrEmpty(axelType)) fieldToUpdate.axelType = axelType;
+  if (!isNullOrNullOrEmpty(longitude)) fieldToUpdate.longitude = longitude;
+  if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
+
   try {
-    if (file.length > 1) {
-      const data = req.body;
-      const imageData = await uploadMultipleImage(file);
-      data.images = imageData;
-      const ad = await Ad.updateOne({ _id: id }, data);
-      if (ad.modifiedCount === 1) {
-        return successResponse(res, 200, "Ad update successfully.", true);
-      } else {
-        return failedResponse(res, 404, "Unable to update ad.", false);
+    if(file){
+      if(file.length > 1){
+        const imageData = await uploadMultipleImage(file);
+        await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
+      }else{
+        const imageData = await uploadSingleImage(file);
+        await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
       }
+    }
+    
+    const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
+    if (ad) {
+      return successResponse(res, 200, "Ad update successfully.", true);
     } else {
-      const data = req.body;
-      const imageData = await uploadSingleImage(file);
-      data.images = imageData;
-      const ad = await Ad.updateOne({ _id: id }, data);
-      if (ad.modifiedCount === 1) {
-        return successResponse(res, 200, "Ad update successfully.", true);
-      } else {
-        return failedResponse(res, 404, "Unable to update ad.", false);
-      }
+      return failedResponse(res, 404, "Unable to update ad.", false);
     }
   } catch (error) {
     return failedResponse(res, 500, "something went wrong.", false);
@@ -533,7 +587,7 @@ const refreshAd = async (req, res) => {
 
       const newAd = await Ad.create(ad1);
       await newAd.save();
-      const ads = await Ad.find({userId: ad1.userId});
+      const ads = await Ad.find({ userId: ad1.userId });
 
       return successResponse(res, 200, "Ad timestamps updated.", true, ads);
     } else {
@@ -547,16 +601,20 @@ const refreshAd = async (req, res) => {
   } catch (error) {}
 };
 
-const adRoomId = async(req, res) => {
+const adRoomId = async (req, res) => {
   const { id, chatId } = req.params;
 
   try {
-    const ad = await Ad.findByIdAndUpdate(id, {$push: {chatIds: chatId }}, { new: true });
-    return successResponse(res, 201, 'Chat room Id added', true);
+    const ad = await Ad.findByIdAndUpdate(
+      id,
+      { $push: { chatIds: chatId } },
+      { new: true }
+    );
+    return successResponse(res, 201, "Chat room Id added", true);
   } catch (error) {
-    return failedResponse(res, 500, 'Unable to add chat Id.', false);
+    return failedResponse(res, 500, "Unable to add chat Id.", false);
   }
-}
+};
 
 export {
   fetchTopAds,
@@ -573,5 +631,5 @@ export {
   searchTitle,
   editAd,
   refreshAd,
-  adRoomId
+  adRoomId,
 };
