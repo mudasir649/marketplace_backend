@@ -14,6 +14,7 @@ import {
   toggleFavorite,
   editAd,
   refreshAd,
+  adRoomId,
 } from "../controllers/adController.js";
 import { checkValidId, validateRequestBody } from "../middleware/adMiddleware.js";
 
@@ -33,5 +34,6 @@ router
   .get("/findVehicleMake/:type", findVehicleMake)
   .get("/findVehicleSubCategory/:type", findVehicleSubCategory)
   .get("/search-title", searchTitle)
+  .put("/updateChatId/:id", adRoomId)
   .put('/refreshAd/:id', refreshAd);
 export default router;

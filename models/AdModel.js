@@ -125,6 +125,12 @@ const AdSchema = new mongoose.Schema(
     longitude: {
       type: Number,
     },
+    chatIds: [
+      {
+        type: String,
+        default: null
+      }
+    ]
   },
   { timestamps: true }
 );

@@ -547,6 +547,17 @@ const refreshAd = async (req, res) => {
   } catch (error) {}
 };
 
+const adRoomId = async(req, res) => {
+  const { id, chatId } = req.params;
+
+  try {
+    const ad = await Ad.findByIdAndUpdate(id, {$push: {chatIds: chatId }}, { new: true });
+    return successResponse(res, 201, 'Chat room Id added', true);
+  } catch (error) {
+    return failedResponse(res, 500, 'Unable to add chat Id.', false);
+  }
+}
+
 export {
   fetchTopAds,
   fetchFeaturedAds,
@@ -562,4 +573,5 @@ export {
   searchTitle,
   editAd,
   refreshAd,
+  adRoomId
 };

@@ -3,6 +3,7 @@ const router = express.Router();
 import admin from "firebase-admin";
 import serviceAccount from "../fireBase.js"
 import { failedResponse, successResponse } from "../utils/response.js";
+import Ad from "../models/AdModel.js";
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -42,6 +43,8 @@ router.post('/', async(req, res) => {
             }
         }
 
+        const ad = await Ad.findByIdAndUpdate(productId, {$push: {chatIds: chatroomId }}, { new: true });
+        console.log(ad);
         return successResponse(res, 200, 'chat room created successfully.', true, chatroomId);
         res.send({ chatroomId });
     } catch (error) {
