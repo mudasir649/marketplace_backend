@@ -620,6 +620,18 @@ const adRoomId = async (req, res) => {
   }
 };
 
+const removeImage = async(req, res) => {
+  const { id } = req.params;
+  const { imageUrl } = req.query;
+  try {
+    const ad = await Ad.findByIdAndUpdate(id, { $pull: { images: imageUrl } }, { new: true });
+    console.log(ad);
+    return successResponse(res, 200, 'image removed successfully.', true);
+  } catch (error) {
+    return failedResponse(res, 500, 'Unable to remove image.', false)
+  }
+}
+
 export {
   fetchTopAds,
   fetchFeaturedAds,
@@ -636,4 +648,5 @@ export {
   editAd,
   refreshAd,
   adRoomId,
+  removeImage
 };
