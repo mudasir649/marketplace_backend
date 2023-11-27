@@ -223,7 +223,7 @@ const editAd = async (req, res) => {
     axelType,
     latitude,
     longitude,
-    file
+    images
   } = req.body;
   
   const fieldToUpdate = {};
@@ -253,7 +253,7 @@ const editAd = async (req, res) => {
   if (!isNullOrNullOrEmpty(axelType)) fieldToUpdate.axelType = axelType;
   if (!isNullOrNullOrEmpty(longitude)) fieldToUpdate.longitude = longitude;
   if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
-  if (!isNullOrNullOrEmpty(file)) fieldToUpdate.images = file
+  if (!isNullOrNullOrEmpty(images)) fieldToUpdate.images = images
 
   try {
     if(!isNullOrNullOrEmpty(req.files)){
@@ -266,7 +266,7 @@ const editAd = async (req, res) => {
         await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
       }
     }
-    
+
     const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
     if (ad) {
       return successResponse(res, 200, "Ad update successfully.", true);
