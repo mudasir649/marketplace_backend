@@ -303,7 +303,7 @@ const addView = async (req, res) => {
 
 const deleteAd = async (req, res) => {
   try {
-    const ad = await Ad.findByIdAndDelete({ _id: req.params.id });
+    await Ad.findByIdAndDelete({ _id: req.params.id });
     return successResponse(res, 204, "ad deleted successfully.", true);
   } catch (error) {
     return failedResponse(res, 500, "unable to delete record.", false);
@@ -311,7 +311,7 @@ const deleteAd = async (req, res) => {
 };
 
 const toggleFavorite = async (req, res) => {
-  const { userId, adId } = req.params; // Assuming userId is in the request body
+  const { userId, adId } = req.params;
   try {
     // Check if the user exists and retrieve their favorites
     const user = await User.findById(userId);
@@ -620,6 +620,18 @@ const adRoomId = async (req, res) => {
   }
 };
 
+const removeImage = async(req, res) => {
+  const { id } = req.params;
+  const { imageUrl } = req.query;
+  try {
+    const ad = await Ad.findByIdAndUpdate(id, { $pull: { images: imageUrl } }, { new: true });
+    console.log(ad);
+    return successResponse(res, 200, 'image removed successfully.', true);
+  } catch (error) {
+    return failedResponse(res, 500, 'Unable to remove image.', false)
+  }
+}
+
 export {
   fetchTopAds,
   fetchFeaturedAds,
@@ -636,4 +648,5 @@ export {
   editAd,
   refreshAd,
   adRoomId,
+  removeImage
 };

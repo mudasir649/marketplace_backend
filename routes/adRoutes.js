@@ -15,6 +15,7 @@ import {
   editAd,
   refreshAd,
   adRoomId,
+  removeImage,
 } from "../controllers/adController.js";
 import { checkValidId, validateRequestBody } from "../middleware/adMiddleware.js";
 
@@ -35,5 +36,6 @@ router
   .get("/findVehicleSubCategory/:type", findVehicleSubCategory)
   .get("/search-title", searchTitle)
   .put("/updateChatId/:id", adRoomId)
+  .put("/removeImage/:id", removeImage)
   .put('/refreshAd/:id', refreshAd);
 export default router;
