@@ -223,6 +223,7 @@ const editAd = async (req, res) => {
     axelType,
     latitude,
     longitude,
+    file
   } = req.body;
   
   const fieldToUpdate = {};
@@ -252,6 +253,7 @@ const editAd = async (req, res) => {
   if (!isNullOrNullOrEmpty(axelType)) fieldToUpdate.axelType = axelType;
   if (!isNullOrNullOrEmpty(longitude)) fieldToUpdate.longitude = longitude;
   if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
+  if (!isNullOrNullOrEmpty(file)) fieldToUpdate.images = file
 
   try {
     if(!isNullOrNullOrEmpty(req.files)){
