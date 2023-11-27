@@ -196,7 +196,6 @@ const editAd = async (req, res) => {
     return value === null || value === undefined || value === "";
   }
   const { id } = req.params;
-  const { file } = req.files;
 
   const {
     title,
@@ -255,7 +254,8 @@ const editAd = async (req, res) => {
   if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
 
   try {
-    if(file){
+    if(!isNullOrNullOrEmpty(req.files)){
+      let { file } = req.files
       if(file.length > 1){
         const imageData = await uploadMultipleImage(file);
         await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
@@ -625,7 +625,6 @@ const removeImage = async(req, res) => {
   const { imageUrl } = req.query;
   try {
     const ad = await Ad.findByIdAndUpdate(id, { $pull: { images: imageUrl } }, { new: true });
-    console.log(ad);
     return successResponse(res, 200, 'image removed successfully.', true);
   } catch (error) {
     return failedResponse(res, 500, 'Unable to remove image.', false)
