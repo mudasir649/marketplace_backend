@@ -278,6 +278,93 @@ const editAd = async (req, res) => {
   }
 };
 
+const editAdMobile = async (req, res) => {
+  function isNullOrNullOrEmpty(value) {
+    return value === null || value === undefined || value === "";
+  }
+  const { id } = req.params;
+
+  const {
+    title,
+    category,
+    subCategory,
+    price,
+    condition,
+    brand,
+    videoUrl,
+    description,
+    phone,
+    whatsapp,
+    viber,
+    address,
+    model,
+    year,
+    bodyShape,
+    gearBox,
+    fuelType,
+    exteriorColor,
+    interiorColor,
+    engineCapacity,
+    cylinder,
+    km,
+    axelType,
+    latitude,
+    longitude,
+    images
+  } = req.body;
+  
+  const fieldToUpdate = {};
+
+  if (!isNullOrNullOrEmpty(title)) fieldToUpdate.title = title;
+  if (!isNullOrNullOrEmpty(category)) fieldToUpdate.category = category;
+  if (!isNullOrNullOrEmpty(subCategory)) fieldToUpdate.subCategory = subCategory;
+  if (!isNullOrNullOrEmpty(price)) fieldToUpdate.price = price;
+  if (!isNullOrNullOrEmpty(condition)) fieldToUpdate.condition = condition;
+  if (!isNullOrNullOrEmpty(brand)) fieldToUpdate.brand = brand;
+  if (!isNullOrNullOrEmpty(videoUrl)) fieldToUpdate.videoUrl = videoUrl;
+  if (!isNullOrNullOrEmpty(description)) fieldToUpdate.description = description;
+  if (!isNullOrNullOrEmpty(phone)) fieldToUpdate.phone = phone;
+  if (!isNullOrNullOrEmpty(whatsapp)) fieldToUpdate.whatsapp = whatsapp;
+  if (!isNullOrNullOrEmpty(viber)) fieldToUpdate.viber = viber;
+  if (!isNullOrNullOrEmpty(model)) fieldToUpdate.model = model;
+  if (!isNullOrNullOrEmpty(year)) fieldToUpdate.year = year;
+  if (!isNullOrNullOrEmpty(km)) fieldToUpdate.km = km;
+  if (!isNullOrNullOrEmpty(address)) fieldToUpdate.address = address;
+  if (!isNullOrNullOrEmpty(bodyShape)) fieldToUpdate.bodyShape = bodyShape;
+  if (!isNullOrNullOrEmpty(gearBox)) fieldToUpdate.gearBox = gearBox;
+  if (!isNullOrNullOrEmpty(fuelType)) fieldToUpdate.fuelType = fuelType;
+  if (!isNullOrNullOrEmpty(exteriorColor)) fieldToUpdate.exteriorColor = exteriorColor;
+  if (!isNullOrNullOrEmpty(interiorColor)) fieldToUpdate.interiorColor = interiorColor;
+  if (!isNullOrNullOrEmpty(engineCapacity)) fieldToUpdate.engineCapacity = engineCapacity;
+  if (!isNullOrNullOrEmpty(cylinder)) fieldToUpdate.cylinder = cylinder;
+  if (!isNullOrNullOrEmpty(axelType)) fieldToUpdate.axelType = axelType;
+  if (!isNullOrNullOrEmpty(longitude)) fieldToUpdate.longitude = longitude;
+  if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
+
+  try {
+    if(!isNullOrNullOrEmpty(req.files)){
+      let { file } = req.files
+      if(file.length > 1){
+        const imageData = await uploadMultipleImage(file);
+        await Ad.findByIdAndUpdate(id, { images: imageData }, { new: true })
+      }else{
+        const imageData = await uploadSingleImage(file);
+        await Ad.findByIdAndUpdate(id, { images: imageData }, { new: true })
+      }
+    }
+
+    const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
+    if (ad) {
+      return successResponse(res, 200, "Ad update successfully.", true);
+    } else {
+      return failedResponse(res, 404, "Unable to update ad.", false);
+    }
+  } catch (error) {
+    return failedResponse(res, 500, "something went wrong.", false);
+  }
+};
+
+
 const getSpecificAd = async (req, res) => {
   try {
     const getUserAd = await Ad.findById({ _id: req.params.id });
@@ -649,5 +736,6 @@ export {
   editAd,
   refreshAd,
   adRoomId,
-  removeImage
+  removeImage,
+  editAdMobile
 };
