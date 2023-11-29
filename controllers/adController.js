@@ -747,7 +747,7 @@ const removeImage = async(req, res) => {
   }
 }
 
-const returnTypesList = async () => {
+const returnTypesList = async (req, res) => {
   try {
     return successResponse(res, 200, 'Post Ad list sent.', true, types_list);
   } catch (error) {
