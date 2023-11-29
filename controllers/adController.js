@@ -15,6 +15,7 @@ import Truck from "../models/TrucksModel.js";
 import Bus from "../models/BussesModel.js";
 import Boats from "../models/BoatsModel.js";
 import Drones from "../models/DronesModel.js";
+import { types_list } from "../utils/PostAdTypes.js";
 
 const fetchTopAds = async (req, res) => {
   try {
@@ -231,7 +232,7 @@ const editAd = async (req, res) => {
   if (!isNullOrNullOrEmpty(title)) fieldToUpdate.title = title;
   if (!isNullOrNullOrEmpty(category)) fieldToUpdate.category = category;
   if (!isNullOrNullOrEmpty(subCategory)) fieldToUpdate.subCategory = subCategory;
-  if (!isNullOrNullOrEmpty(price)) fieldToUpdate.price = price;
+  if (isNullOrNullOrEmpty(price)) fieldToUpdate.price = price;
   if (!isNullOrNullOrEmpty(condition)) fieldToUpdate.condition = condition;
   if (!isNullOrNullOrEmpty(brand)) fieldToUpdate.brand = brand;
   if (!isNullOrNullOrEmpty(videoUrl)) fieldToUpdate.videoUrl = videoUrl;
@@ -253,16 +254,42 @@ const editAd = async (req, res) => {
   if (!isNullOrNullOrEmpty(axelType)) fieldToUpdate.axelType = axelType;
   if (!isNullOrNullOrEmpty(longitude)) fieldToUpdate.longitude = longitude;
   if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
-  if (!isNullOrNullOrEmpty(images)) fieldToUpdate.images = images
+  if (!isNullOrNullOrEmpty(images)) fieldToUpdate.images = images;
+
+
+
+  if(!isNullOrNullOrEmpty(req.files)){
+    let { file } = req.files
+    if(file.length > 1){
+      const imageData = await uploadMultipleImage(file);
+      await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
+    }else{
+      const imageData = await uploadSingleImage(file);
+      await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
+    }
+  }
+
+  console.log(fieldToUpdate);
+
+  // return 'this is working..'
+
+  const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
+  if (ad) {
+    return successResponse(res, 200, "Ad update successfully.", true);
+  } else {
+    return failedResponse(res, 404, "Unable to update ad.", false);
+  }
 
   try {
     if(!isNullOrNullOrEmpty(req.files)){
       let { file } = req.files
       if(file.length > 1){
         const imageData = await uploadMultipleImage(file);
+        images.push(imageData)
         await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
       }else{
         const imageData = await uploadSingleImage(file);
+        images.push(imageData)
         await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
       }
     }
@@ -720,6 +747,14 @@ const removeImage = async(req, res) => {
   }
 }
 
+const returnTypesList = async () => {
+  try {
+    return successResponse(res, 200, 'Post Ad list sent.', true, types_list);
+  } catch (error) {
+    return failedResponse(res, 500, 'Something went wrong.', false)
+  }
+}
+
 export {
   fetchTopAds,
   fetchFeaturedAds,
@@ -737,5 +772,6 @@ export {
   refreshAd,
   adRoomId,
   removeImage,
-  editAdMobile
+  editAdMobile,
+  returnTypesList
 };

@@ -19,6 +19,10 @@ const AdSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    type: {
+      type: String,
+      default: null,
+    },
     title: {
       type: String,
       default: null,
@@ -59,7 +63,7 @@ const AdSchema = new mongoose.Schema(
       type: String,
     },
     viber: {
-      type: Number,
+      type: String,
     },
     website: {
       type: String,

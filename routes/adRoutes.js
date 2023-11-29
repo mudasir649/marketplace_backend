@@ -17,6 +17,7 @@ import {
   adRoomId,
   removeImage,
   editAdMobile,
+  returnTypesList,
 } from "../controllers/adController.js";
 import { checkValidId, validateRequestBody } from "../middleware/adMiddleware.js";
 
@@ -27,6 +28,7 @@ router
   .get("/fetchFeatured", fetchFeaturedAds)
   .get("/fetchTopAds", fetchTopAds)
   .post("/adPost", createAd)
+  .get("/get-types-list", returnTypesList)
   .patch("/edit-ad/:id", editAd)
   .patch("/edit-ad-mobile/:id", editAdMobile)
   .get("/getSpecific/:id", checkValidId, getSpecificAd)
