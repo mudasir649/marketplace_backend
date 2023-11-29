@@ -498,7 +498,7 @@ const findVehicleMake = async (req, res) => {
       carArr.push(cars[i].make);
     }
     return successResponse(res, 200, "car is created.", true, { make: carArr });
-  } else if (type === "Motorcycles") {
+  } else if (type === "Motorcycle") {
     let bikeArr = [];
     const motorcycle = await Motorcycles.find().sort("make");
     for (let i = 0; i < motorcycle.length; i++) {
