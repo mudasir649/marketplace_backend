@@ -9,9 +9,9 @@ export const types_list = [
         image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pci9_qjg7fd.png",
         subCategories: [
             'Bicycles',
-            'E-scooter',
+            'E-scooters',
             'E-bikes',
-            'Motorcycle'
+            'Motorcycles'
         ]
     },
     {
@@ -22,11 +22,6 @@ export const types_list = [
     {
         name: "Busses",
         image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic2_fjlqqt.png",
-        subCategories: [""]
-    },
-    {
-        name: "Construction Machines",
-        image: "https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257532/pic7_kecdjc.png",
         subCategories: [""]
     },
     {
@@ -45,6 +40,11 @@ export const types_list = [
         subCategories: [""]
     },
     {
+        name: "Construction Machines",
+        image: "https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257532/pic7_kecdjc.png",
+        subCategories: [""]
+    },
+    {
         name: "Vans",
         image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701258110/pic11_w6b4j1.png",
         subCategories: [""]
@@ -53,16 +53,16 @@ export const types_list = [
         name: "Parts",
         image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic10_xu1h7k.png",
         subCategories: [
-            "Auto Parts",
-            "Bike Parts",
-            "Boat Parts",
-            "Bus Parts",
-            "Construction Machine Parts",
-            "Drone Parts",
+            "Autos",
+            "Bikes",
+            "Boats",
+            "Busses",
+            "Construction Machines",
+            "Drones",
             "Other Parts",
-            "Trailer Parts",
-            "Truck Parts",
-            "Van Parts"
+            "Trailers",
+            "Trucks",
+            "Vans"
         ]
     },
     {
