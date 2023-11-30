@@ -10,7 +10,7 @@ export const types_list = [
         subCategories: [
             {
                 name:'Bicycles',
-                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/motorcycle_wy4hrk.png'
+                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/bicycle_cj7jva.png'
             },
             {
                 name:'E-scooters',
@@ -18,11 +18,11 @@ export const types_list = [
             },
             {
                 name: 'E-bikes', 
-                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/bicycle_cj7jva.png'
+                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/kick-scooter_tmgy2n.png'
             },
             {
                 name: 'Motorcycles',
-                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/kick-scooter_tmgy2n.png'
+                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/motorcycle_wy4hrk.png'
             }
         ]
     },
