@@ -15,7 +15,7 @@ import Truck from "../models/TrucksModel.js";
 import Bus from "../models/BussesModel.js";
 import Boats from "../models/BoatsModel.js";
 import Drones from "../models/DronesModel.js";
-import { types_list, gearBox, conditionList, exteriorColor, interiorColor, AutosBodyShape, fuelType, kilometers, axelType } from "../utils/PostAdTypes.js";
+import { types_list, gearBox, conditionList, exteriorColor, interiorColor, AutosBodyShape, fuelType, kilometers, axelType, bikeBodyShape, bikeColor, BikeFuelType } from "../utils/PostAdTypes.js";
 
 const fetchTopAds = async (req, res) => {
   try {
@@ -767,6 +767,15 @@ const returnData = async (req, res) => {
         interiorColor
       }
       return successResponse(res, 200, 'Post Ad list sent.', true, autosList);
+    }else if(type === "Motorcycles"){
+      const bussList = {
+        conditionList,
+        BikeFuelType,
+        bikeBodyShape,
+        kilometers,
+        bikeColor
+      }
+      return successResponse(res, 200, 'Post Ad list sent.', true, bussList);
     }else if(type === "Busses"){
       const bussList = {
         conditionList,
