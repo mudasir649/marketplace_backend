@@ -15,7 +15,7 @@ import Truck from "../models/TrucksModel.js";
 import Bus from "../models/BussesModel.js";
 import Boats from "../models/BoatsModel.js";
 import Drones from "../models/DronesModel.js";
-import { types_list } from "../utils/PostAdTypes.js";
+import { types_list, gearBox, conditionList, exteriorColor, interiorColor, AutosBodyShape, fuelType, kilometers } from "../utils/PostAdTypes.js";
 
 const fetchTopAds = async (req, res) => {
   try {
@@ -753,6 +753,26 @@ const returnTypesList = async (req, res) => {
   }
 }
 
+const returnData = async (req, res) => {
+  const { type } = req.query;
+  if(type === "Autos"){
+    const autosList = {
+      conditionList,
+      gearBox,
+      AutosBodyShape,
+      fuelType,
+      kilometers,
+      exteriorColor,
+      interiorColor
+    }
+    return successResponse(res, 200, 'Post Ad list sent.', true, autosList);
+  }
+  try {
+  } catch (error) {
+    return failedResponse(res, 500, 'Something went wrong.', false)
+  }
+}
+
 export {
   fetchTopAds,
   fetchFeaturedAds,
@@ -770,5 +790,6 @@ export {
   refreshAd,
   adRoomId,
   editAdMobile,
-  returnTypesList
+  returnTypesList,
+  returnData
 };
