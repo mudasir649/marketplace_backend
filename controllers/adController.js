@@ -44,6 +44,10 @@ const fetchAllAds = async (req, res) => {
     address,
     category,
     subCategory,
+    bodyShape,
+    gearBox,
+    km,
+    fuelType,
     title,
     page,
     condition,
@@ -64,6 +68,10 @@ const fetchAllAds = async (req, res) => {
 
     if (!isNullOrNullOrEmpty(category)) query.category = category;
     if (!isNullOrNullOrEmpty(subCategory)) query.subCategory = subCategory;
+    if (!isNullOrNullOrEmpty(fuelType)) query.fuelType = fuelType;
+    if (!isNullOrNullOrEmpty(gearBox)) query.gearBox = gearBox;
+    if (!isNullOrNullOrEmpty(km)) query.km = km;
+    if (!isNullOrNullOrEmpty(bodyShape)) query.bodyShape = bodyShape;
     if (!isNullOrNullOrEmpty(address)) query.address = addressRegex;
     if (!isNullOrNullOrEmpty(title)) query.title = titleRegex;
     if (!isNullOrNullOrEmpty(condition)) query.condition = condition;
