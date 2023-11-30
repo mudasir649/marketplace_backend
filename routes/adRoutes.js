@@ -15,7 +15,6 @@ import {
   editAd,
   refreshAd,
   adRoomId,
-  removeImage,
   editAdMobile,
   returnTypesList,
 } from "../controllers/adController.js";
@@ -40,6 +39,5 @@ router
   .get("/findVehicleSubCategory/:type", findVehicleSubCategory)
   .get("/search-title", searchTitle)
   .put("/updateChatId/:id", adRoomId)
-  .put("/removeImage/:id", removeImage)
   .put('/refreshAd/:id', refreshAd);
 export default router;
