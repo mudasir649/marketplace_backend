@@ -506,7 +506,7 @@ const findVehicleMake = async (req, res) => {
       carArr.push(cars[i].make);
     }
     return successResponse(res, 200, "car is created.", true, { make: carArr });
-  } else if (type === "Motorcycle") {
+  } else if (type === "Motorcycles") {
     let bikeArr = [];
     const motorcycle = await Motorcycles.find().sort("make");
     for (let i = 0; i < motorcycle.length; i++) {
@@ -529,7 +529,7 @@ const findVehicleMake = async (req, res) => {
     return successResponse(res, 200, "motorcycle make is sent.", true, {
       make: bikesSubArr,
     });
-  } else if (type === "E-scooter") {
+  } else if (type === "E-scooters") {
     const bikesSubCat = await BikesSubcategory.find({
       category: "eScooters",
     }).select("make");
@@ -744,16 +744,6 @@ const adRoomId = async (req, res) => {
   }
 };
 
-const removeImage = async(req, res) => {
-  const { id } = req.params;
-  const { imageUrl } = req.query;
-  try {
-    const ad = await Ad.findByIdAndUpdate(id, { $pull: { images: imageUrl } }, { new: true });
-    return successResponse(res, 200, 'image removed successfully.', true);
-  } catch (error) {
-    return failedResponse(res, 500, 'Unable to remove image.', false)
-  }
-}
 
 const returnTypesList = async (req, res) => {
   try {
@@ -779,7 +769,6 @@ export {
   editAd,
   refreshAd,
   adRoomId,
-  removeImage,
   editAdMobile,
   returnTypesList
 };

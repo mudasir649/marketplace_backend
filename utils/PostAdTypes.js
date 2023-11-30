@@ -59,10 +59,10 @@ export const types_list = [
             "Busses",
             "Construction Machines",
             "Drones",
-            "Other Parts",
             "Trailers",
             "Trucks",
-            "Vans"
+            "Vans",
+            "Other Parts",
         ]
     },
     {
