@@ -57,6 +57,7 @@ const fetchAllAds = async (req, res) => {
     minPrice,
     maxPrice,
     sortBy,
+    type,
   } = req.query;
 
   const addressRegex = new RegExp(address, "i");
@@ -67,6 +68,7 @@ const fetchAllAds = async (req, res) => {
     let sortOptions = {};
 
     if (!isNullOrNullOrEmpty(category)) query.category = category;
+    if (!isNullOrNullOrEmpty(type)) query.type = type;
     if (!isNullOrNullOrEmpty(subCategory)) query.subCategory = subCategory;
     if (!isNullOrNullOrEmpty(fuelType)) query.fuelType = fuelType;
     if (!isNullOrNullOrEmpty(gearBox)) query.gearBox = gearBox;
