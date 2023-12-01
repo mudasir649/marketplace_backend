@@ -141,9 +141,6 @@ const fetchFeaturedAds = async (req, res) => {
 
 const createAd = async (req, res) => {
   const { file } = req.files;
-
-  console.log(req.body);
-
   try {
     if (file.length > 1) {
       const data = req.body;
@@ -240,17 +237,34 @@ const editAd = async (req, res) => {
   
   const fieldToUpdate = {};
 
+  if(!isNullOrNullOrEmpty(viber)) {
+    fieldToUpdate.viber = viber;
+  }else{
+    fieldToUpdate.viber = ""
+  }
+
+  if(!isNullOrNullOrEmpty(whatsapp)) {
+    fieldToUpdate.whatsapp = whatsapp;
+  }else{
+    fieldToUpdate.whatsapp = ""
+  }
+
+  if(!isNullOrNullOrEmpty(price)) {
+    fieldToUpdate.price = price;
+  }else{
+    fieldToUpdate.price = ""
+  }
+
+  
+
   if (!isNullOrNullOrEmpty(title)) fieldToUpdate.title = title;
   if (!isNullOrNullOrEmpty(category)) fieldToUpdate.category = category;
   if (!isNullOrNullOrEmpty(subCategory)) fieldToUpdate.subCategory = subCategory;
-  if (isNullOrNullOrEmpty(price)) fieldToUpdate.price = price;
   if (!isNullOrNullOrEmpty(condition)) fieldToUpdate.condition = condition;
   if (!isNullOrNullOrEmpty(brand)) fieldToUpdate.brand = brand;
   if (!isNullOrNullOrEmpty(videoUrl)) fieldToUpdate.videoUrl = videoUrl;
   if (!isNullOrNullOrEmpty(description)) fieldToUpdate.description = description;
   if (!isNullOrNullOrEmpty(phone)) fieldToUpdate.phone = phone;
-  if (!isNullOrNullOrEmpty(whatsapp)) fieldToUpdate.whatsapp = whatsapp;
-  if (!isNullOrNullOrEmpty(viber)) fieldToUpdate.viber = viber;
   if (!isNullOrNullOrEmpty(model)) fieldToUpdate.model = model;
   if (!isNullOrNullOrEmpty(year)) fieldToUpdate.year = year;
   if (!isNullOrNullOrEmpty(km)) fieldToUpdate.km = km;
@@ -265,55 +279,91 @@ const editAd = async (req, res) => {
   if (!isNullOrNullOrEmpty(axelType)) fieldToUpdate.axelType = axelType;
   if (!isNullOrNullOrEmpty(longitude)) fieldToUpdate.longitude = longitude;
   if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
-  if (!isNullOrNullOrEmpty(images)) fieldToUpdate.images = images;
 
-
-
-  if(!isNullOrNullOrEmpty(req.files)){
-    let { file } = req.files
-    if(file.length > 1){
-      const imageData = await uploadMultipleImage(file);
-      await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
-    }else{
-      const imageData = await uploadSingleImage(file);
-      await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
+  if (!isNullOrNullOrEmpty(req.files)) {
+    let { file } = req.files;
+    let imageData;
+    let newImg = [];
+  
+    if (Array.isArray(file)) {
+      // Multiple images
+      imageData = await uploadMultipleImage(file);
+      for (let i = 0; i < imageData.length; i++) {
+        newImg.push(imageData[i]);
+      }
+      // Assuming that `images` is an array already declared elsewhere in your code
+      newImg.push(images);
+      fieldToUpdate.images = newImg;
+    } else {
+      // Single image
+      imageData = await uploadSingleImage(file);
+      newImg = [...images, imageData];
+      fieldToUpdate.images = newImg;
     }
+  }else{
+    fieldToUpdate.images = images;
   }
 
   console.log(fieldToUpdate);
+  // return successResponse(res, 200, "Ad update successfully.", true);
 
-  // return 'this is working..'
+  const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true });
+  console.log(ad);
+  return successResponse(res, 200, "Ad update successfully.", true);
 
-  const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
+
+  // const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
   if (ad) {
     return successResponse(res, 200, "Ad update successfully.", true);
   } else {
     return failedResponse(res, 404, "Unable to update ad.", false);
   }
 
-  try {
-    if(!isNullOrNullOrEmpty(req.files)){
-      let { file } = req.files
-      if(file.length > 1){
-        const imageData = await uploadMultipleImage(file);
-        images.push(imageData)
-        await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
-      }else{
-        const imageData = await uploadSingleImage(file);
-        images.push(imageData)
-        await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
-      }
-    }
 
-    const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
-    if (ad) {
-      return successResponse(res, 200, "Ad update successfully.", true);
-    } else {
-      return failedResponse(res, 404, "Unable to update ad.", false);
-    }
-  } catch (error) {
-    return failedResponse(res, 500, "something went wrong.", false);
-  }
+
+  // if(!isNullOrNullOrEmpty(req.files)){
+  //   let { file } = req.files;
+  //   let imageData;
+  //   if (file.length > 1) {
+  //     imageData = await uploadMultipleImage(file);
+  //     imageData.push(fieldToUpdate.images);
+  //     fieldToUpdate.images = imageData;
+  //   } else {
+  //     imageData = await uploadSingleImage(file);
+  //     fieldToUpdate.images = [fieldToUpdate.images, imageData];
+  //   }
+  // }
+
+  // const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
+  // if (ad) {
+  //   return successResponse(res, 200, "Ad update successfully.", true);
+  // } else {
+  //   return failedResponse(res, 404, "Unable to update ad.", false);
+  // }
+
+  // try {
+  //   if(!isNullOrNullOrEmpty(req.files)){
+  //     let { file } = req.files
+  //     if(file.length > 1){
+  //       const imageData = await uploadMultipleImage(file);
+  //       images.push(imageData)
+  //       await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
+  //     }else{
+  //       const imageData = await uploadSingleImage(file);
+  //       images.push(imageData)
+  //       await Ad.findByIdAndUpdate(id, {$push: { images: imageData }}, { new: true });
+  //     }
+  //   }
+
+  //   const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
+  //   if (ad) {
+  //     return successResponse(res, 200, "Ad update successfully.", true);
+  //   } else {
+  //     return failedResponse(res, 404, "Unable to update ad.", false);
+  //   }
+  // } catch (error) {
+  //   return failedResponse(res, 500, "something went wrong.", false);
+  // }
 };
 
 const editAdMobile = async (req, res) => {
