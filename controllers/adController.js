@@ -141,6 +141,9 @@ const fetchFeaturedAds = async (req, res) => {
 
 const createAd = async (req, res) => {
   const { file } = req.files;
+
+  console.log(req.body);
+
   try {
     if (file.length > 1) {
       const data = req.body;
