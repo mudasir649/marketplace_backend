@@ -294,27 +294,23 @@ const editAd = async (req, res) => {
         newImg.push(imageData[i]);
       }
       // Assuming that `images` is an array already declared elsewhere in your code
-      newImg.push(images);
+      const imgsSplit = images.split(',');
+      for (let i = 0; i < imgsSplit.length; i++) {
+        newImg.push(imgsSplit[i]);
+      }
+      // newImg.push(imgsSplit);
       fieldToUpdate.images = newImg;
     } else {
       // Single image
       imageData = await uploadSingleImage(file);
-      newImg = [...images, imageData];
+      newImg = [images, imageData];
       fieldToUpdate.images = newImg;
     }
   }else{
     fieldToUpdate.images = images;
   }
 
-  console.log(fieldToUpdate);
-  // return successResponse(res, 200, "Ad update successfully.", true);
-
   const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true });
-  console.log(ad);
-  return successResponse(res, 200, "Ad update successfully.", true);
-
-
-  // const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
   if (ad) {
     return successResponse(res, 200, "Ad update successfully.", true);
   } else {
