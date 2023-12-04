@@ -288,27 +288,36 @@ const editAd = async (req, res) => {
     let newImg = [];
   
     if (Array.isArray(file)) {
+      // spliting image links and saving in array
+      if(images.length !== 0){
+        const imgsSplit = images.split(',');
+        for (let i = 0; i < imgsSplit.length; i++) {
+          newImg.push(imgsSplit[i]);
+        }
+      }
       // Multiple images
       imageData = await uploadMultipleImage(file);
       for (let i = 0; i < imageData.length; i++) {
         newImg.push(imageData[i]);
       }
-      // Assuming that `images` is an array already declared elsewhere in your code
-      const imgsSplit = images.split(',');
-      for (let i = 0; i < imgsSplit.length; i++) {
-        newImg.push(imgsSplit[i]);
-      }
-      // newImg.push(imgsSplit);
       fieldToUpdate.images = newImg;
     } else {
       // Single image
+      if(images.length !== 0){
+        const imgsSplit = images.split(',');
+        for (let i = 0; i < imgsSplit.length; i++) {
+          newImg.push(imgsSplit[i]);
+        }
+      }
       imageData = await uploadSingleImage(file);
-      newImg = [images, imageData];
+      newImg.push(imageData)
       fieldToUpdate.images = newImg;
     }
   }else{
     fieldToUpdate.images = images;
   }
+
+  console.log(fieldToUpdate.images);
 
   const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true });
   if (ad) {
