@@ -86,7 +86,7 @@ const fetchAllAds = async (req, res) => {
       query.price = { $gte: maxPrice, $lte: minPrice };
 
     switch (sortBy) {
-      case "Old":
+      case "Oldest":
         sortOptions = { createdAt: 1 };
         break;
       case "A to Z (title)":
