@@ -66,39 +66,39 @@ export const types_list = [
         image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic10_xu1h7k.png",
         subCategories: [
             {
-                name:"Autos",
+                name:"Auto",
                 image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257529/pic3_asgavk.png",
             },
             {
-                name:'Bikes',
+                name:'Bike',
                 image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pci9_qjg7fd.png",
             },
             {
-                name:"Boats",
+                name:"Boat",
                 image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic1_kpxx5e.png",
             },
             {
-                name:"Busses",
+                name:"Buss",
                 image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic2_fjlqqt.png",
             },
             {
-                name:"Construction Machines",
+                name:"Construction Machine",
                 image: "https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257532/pic7_kecdjc.png",
             },
             {
-                name:"Drones",
+                name:"Drone",
                 image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257531/pic5_i7uwpf.png",
             },
             {
-                name:"Trailers",
+                name:"Trailer",
                 image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257532/pic6_jcejhj.png",
             },
             {
-                name: "Trucks",
+                name: "Truck",
                 image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257531/pic4_a7imhy.png",
             },
             {
-                name: "Vans",
+                name: "Van",
                 image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701258110/pic11_w6b4j1.png",
             },
             {

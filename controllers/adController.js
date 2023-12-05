@@ -533,13 +533,14 @@ const toggleFavorite = async (req, res) => {
 
 const findModels = async (req, res) => {
   const { type, make } = req.params;
+  console.log(req.params);
   if (type == "Autos") {
     const cars = await Cars.find({ make: make })
       .select("model")
       .sort("model")
       .maxTimeMS("20000");
     return successResponse(res, 200, "car is created.", true, cars);
-  } else if (type == "Motorcycle") {
+  } else if (type == "Motorcycles") {
     const motorcycle = await Motorcycles.find({ make: make })
       .select("model")
       .sort("model")

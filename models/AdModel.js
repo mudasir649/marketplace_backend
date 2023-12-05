@@ -31,14 +31,6 @@ const AdSchema = new mongoose.Schema(
       type: Number,
       default: null,
     },
-    minPrice: {
-      type: Number,
-      default: 0,
-    },
-    maxPrice: {
-      type: Number,
-      default: 0,
-    },
     condition: {
       type: String,
       default: null,
@@ -63,9 +55,6 @@ const AdSchema = new mongoose.Schema(
       type: String,
     },
     viber: {
-      type: String,
-    },
-    website: {
       type: String,
     },
     address: {
@@ -97,14 +86,6 @@ const AdSchema = new mongoose.Schema(
       default: null,
     },
     interiorColor: {
-      type: String,
-      default: null,
-    },
-    engineCapacity: {
-      type: String,
-      default: null,
-    },
-    cylinder: {
       type: String,
       default: null,
     },
