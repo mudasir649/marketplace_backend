@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
+import path, { extname } from "path";
+import hbs from 'nodemailer-express-handlebars';
 
-export async function sendEmailReset(email, subject, code) {
+export async function sendEmailReset(email, subject, text, code) {
     
     const transport = nodemailer.createTransport({
         host: 'smtp-relay.brevo.com',
@@ -12,11 +14,27 @@ export async function sendEmailReset(email, subject, code) {
         }
     })
 
+    const handlebarOptions = {
+        viewEngine: {
+            extName: '.handlebars',
+            partialsDir: path.resolve('./views'),
+            defaultLayout: false
+        },
+        viewPath: path.resolve('./views'),
+        extname: 'handlebars'
+    }
+
+    transport.use('compile', hbs(handlebarOptions))
+
     const mailOptions = {
         from: 'eidcarosse@gmail.com',
         to: email,
         subject,
-        text: `Copy the password to reset password: ${code}`,
+        template: 'email',
+        context: {
+            text: text,
+            code: code
+        }
     }
 
     transport.sendMail(mailOptions, (error, info) => {

@@ -14,7 +14,8 @@ import Ad from "../models/AdModel.js";
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email }).select("password");
+  try {
+    const user = await User.findOne({ email }).select("password");
   if (user && (await bcrypt.compare(password, user.password))) {
     // userDetails variable is created because in this variable it will store all values of
     // user except password and returned to the user
@@ -41,7 +42,7 @@ const login = async (req, res) => {
         res
       );
       await OTP.create({ resetCode, token });
-      await sendEmailReset(email, "This is email for reset.", resetCode);
+      await sendEmailReset(email, "This is email for reset.", 'This is the code to verify you account', resetCode);
       return successResponse(
         res,
         400,
@@ -53,11 +54,13 @@ const login = async (req, res) => {
   } else {
     return failedResponse(res, 401, "Invalid email or password.", false);
   }
+  } catch (error) {
+    return failedResponse(res, 500, "Something went wrong.", false);
+  }
 };
 
 const register = async (req, res) => {
-  const { firstName, lastName, email, userName, password, phoneNumber } =
-    req.body;
+  const { firstName, lastName, email, userName, password, phoneNumber } = req.body;
   const existingUser = await User.findOne({ email });
   if (existingUser?.email) {
     return failedResponse(
@@ -305,8 +308,8 @@ const changePassword = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
-  const user = await User.findOne({ email });
   try {
+    const user = await User.findOne({ email });
     if (!user) {
       return failedResponse(
         res,
@@ -324,7 +327,7 @@ const forgotPassword = async (req, res) => {
         res
       );
       const resetModel = await OTP.create({ resetCode, token });
-      await sendEmailReset(email, "This is email for reset.", resetCode);
+      await sendEmailReset(email, "This is email for reset.", 'Copy the password to reset password', resetCode);
       return successResponse(
         res,
         200,
