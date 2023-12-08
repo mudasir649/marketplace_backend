@@ -15,7 +15,20 @@ import Truck from "../models/TrucksModel.js";
 import Bus from "../models/BussesModel.js";
 import Boats from "../models/BoatsModel.js";
 import Drones from "../models/DronesModel.js";
-import { types_list, gearBox, conditionList, exteriorColor, interiorColor, AutosBodyShape, fuelType, kilometers, axelType, bikeBodyShape, bikeColor, BikeFuelType } from "../utils/PostAdTypes.js";
+import {
+  types_list,
+  gearBox,
+  conditionList,
+  exteriorColor,
+  interiorColor,
+  AutosBodyShape,
+  fuelType,
+  kilometers,
+  axelType,
+  bikeBodyShape,
+  bikeColor,
+  BikeFuelType,
+} from "../utils/PostAdTypes.js";
 
 const fetchTopAds = async (req, res) => {
   try {
@@ -234,38 +247,39 @@ const editAd = async (req, res) => {
     axelType,
     latitude,
     longitude,
-    images
+    images,
+    type,
   } = req.body;
-  
+
   const fieldToUpdate = {};
 
-  if(!isNullOrNullOrEmpty(viber)) {
+  if (!isNullOrNullOrEmpty(viber)) {
     fieldToUpdate.viber = viber;
-  }else{
-    fieldToUpdate.viber = ""
+  } else {
+    fieldToUpdate.viber = "";
   }
 
-  if(!isNullOrNullOrEmpty(whatsapp)) {
+  if (!isNullOrNullOrEmpty(whatsapp)) {
     fieldToUpdate.whatsapp = whatsapp;
-  }else{
-    fieldToUpdate.whatsapp = ""
+  } else {
+    fieldToUpdate.whatsapp = "";
   }
 
-  if(!isNullOrNullOrEmpty(price)) {
+  if (!isNullOrNullOrEmpty(price)) {
     fieldToUpdate.price = price;
-  }else{
-    fieldToUpdate.price = ""
+  } else {
+    fieldToUpdate.price = "";
   }
-
-  
 
   if (!isNullOrNullOrEmpty(title)) fieldToUpdate.title = title;
   if (!isNullOrNullOrEmpty(category)) fieldToUpdate.category = category;
-  if (!isNullOrNullOrEmpty(subCategory)) fieldToUpdate.subCategory = subCategory;
+  if (!isNullOrNullOrEmpty(subCategory))
+    fieldToUpdate.subCategory = subCategory;
   if (!isNullOrNullOrEmpty(condition)) fieldToUpdate.condition = condition;
   if (!isNullOrNullOrEmpty(brand)) fieldToUpdate.brand = brand;
   if (!isNullOrNullOrEmpty(videoUrl)) fieldToUpdate.videoUrl = videoUrl;
-  if (!isNullOrNullOrEmpty(description)) fieldToUpdate.description = description;
+  if (!isNullOrNullOrEmpty(description))
+    fieldToUpdate.description = description;
   if (!isNullOrNullOrEmpty(phone)) fieldToUpdate.phone = phone;
   if (!isNullOrNullOrEmpty(model)) fieldToUpdate.model = model;
   if (!isNullOrNullOrEmpty(year)) fieldToUpdate.year = year;
@@ -274,13 +288,17 @@ const editAd = async (req, res) => {
   if (!isNullOrNullOrEmpty(bodyShape)) fieldToUpdate.bodyShape = bodyShape;
   if (!isNullOrNullOrEmpty(gearBox)) fieldToUpdate.gearBox = gearBox;
   if (!isNullOrNullOrEmpty(fuelType)) fieldToUpdate.fuelType = fuelType;
-  if (!isNullOrNullOrEmpty(exteriorColor)) fieldToUpdate.exteriorColor = exteriorColor;
-  if (!isNullOrNullOrEmpty(interiorColor)) fieldToUpdate.interiorColor = interiorColor;
-  if (!isNullOrNullOrEmpty(engineCapacity)) fieldToUpdate.engineCapacity = engineCapacity;
+  if (!isNullOrNullOrEmpty(exteriorColor))
+    fieldToUpdate.exteriorColor = exteriorColor;
+  if (!isNullOrNullOrEmpty(interiorColor))
+    fieldToUpdate.interiorColor = interiorColor;
+  if (!isNullOrNullOrEmpty(engineCapacity))
+    fieldToUpdate.engineCapacity = engineCapacity;
   if (!isNullOrNullOrEmpty(cylinder)) fieldToUpdate.cylinder = cylinder;
   if (!isNullOrNullOrEmpty(axelType)) fieldToUpdate.axelType = axelType;
   if (!isNullOrNullOrEmpty(longitude)) fieldToUpdate.longitude = longitude;
   if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
+  if (!isNullOrNullOrEmpty(type)) fieldToUpdate.type = type;
 
   // if(!isNullOrNullOrEmpty(req.files)){
   //   let { file } = req.files;
@@ -307,11 +325,11 @@ const editAd = async (req, res) => {
       let { file } = req.files;
       let imageData;
       let newImg = [];
-    
+
       if (Array.isArray(file)) {
         // spliting image links and saving in array
-        if(images.length !== 0){
-          const imgsSplit = images.split(',');
+        if (images.length !== 0) {
+          const imgsSplit = images.split(",");
           for (let i = 0; i < imgsSplit.length; i++) {
             newImg.push(imgsSplit[i]);
           }
@@ -324,23 +342,25 @@ const editAd = async (req, res) => {
         fieldToUpdate.images = newImg;
       } else {
         // Single image
-        if(images.length !== 0){
-          const imgsSplit = images.split(',');
+        if (images.length !== 0) {
+          const imgsSplit = images.split(",");
           for (let i = 0; i < imgsSplit.length; i++) {
             newImg.push(imgsSplit[i]);
           }
         }
         imageData = await uploadSingleImage(file);
-        newImg.push(imageData)
+        newImg.push(imageData);
         fieldToUpdate.images = newImg;
       }
-    }else{
+    } else {
       fieldToUpdate.images = images;
     }
-  
+
     console.log(fieldToUpdate.images);
-  
-    const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true });
+
+    const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, {
+      new: true,
+    });
     if (ad) {
       return successResponse(res, 200, "Ad update successfully.", true);
     } else {
@@ -383,19 +403,21 @@ const editAdMobile = async (req, res) => {
     axelType,
     latitude,
     longitude,
-    images
+    type,
   } = req.body;
-  
+
   const fieldToUpdate = {};
 
   if (!isNullOrNullOrEmpty(title)) fieldToUpdate.title = title;
   if (!isNullOrNullOrEmpty(category)) fieldToUpdate.category = category;
-  if (!isNullOrNullOrEmpty(subCategory)) fieldToUpdate.subCategory = subCategory;
+  if (!isNullOrNullOrEmpty(subCategory))
+    fieldToUpdate.subCategory = subCategory;
   if (!isNullOrNullOrEmpty(price)) fieldToUpdate.price = price;
   if (!isNullOrNullOrEmpty(condition)) fieldToUpdate.condition = condition;
   if (!isNullOrNullOrEmpty(brand)) fieldToUpdate.brand = brand;
   if (!isNullOrNullOrEmpty(videoUrl)) fieldToUpdate.videoUrl = videoUrl;
-  if (!isNullOrNullOrEmpty(description)) fieldToUpdate.description = description;
+  if (!isNullOrNullOrEmpty(description))
+    fieldToUpdate.description = description;
   if (!isNullOrNullOrEmpty(phone)) fieldToUpdate.phone = phone;
   if (!isNullOrNullOrEmpty(whatsapp)) fieldToUpdate.whatsapp = whatsapp;
   if (!isNullOrNullOrEmpty(viber)) fieldToUpdate.viber = viber;
@@ -406,27 +428,33 @@ const editAdMobile = async (req, res) => {
   if (!isNullOrNullOrEmpty(bodyShape)) fieldToUpdate.bodyShape = bodyShape;
   if (!isNullOrNullOrEmpty(gearBox)) fieldToUpdate.gearBox = gearBox;
   if (!isNullOrNullOrEmpty(fuelType)) fieldToUpdate.fuelType = fuelType;
-  if (!isNullOrNullOrEmpty(exteriorColor)) fieldToUpdate.exteriorColor = exteriorColor;
-  if (!isNullOrNullOrEmpty(interiorColor)) fieldToUpdate.interiorColor = interiorColor;
-  if (!isNullOrNullOrEmpty(engineCapacity)) fieldToUpdate.engineCapacity = engineCapacity;
+  if (!isNullOrNullOrEmpty(exteriorColor))
+    fieldToUpdate.exteriorColor = exteriorColor;
+  if (!isNullOrNullOrEmpty(interiorColor))
+    fieldToUpdate.interiorColor = interiorColor;
+  if (!isNullOrNullOrEmpty(engineCapacity))
+    fieldToUpdate.engineCapacity = engineCapacity;
   if (!isNullOrNullOrEmpty(cylinder)) fieldToUpdate.cylinder = cylinder;
   if (!isNullOrNullOrEmpty(axelType)) fieldToUpdate.axelType = axelType;
   if (!isNullOrNullOrEmpty(longitude)) fieldToUpdate.longitude = longitude;
   if (!isNullOrNullOrEmpty(latitude)) fieldToUpdate.latitude = latitude;
+  if (!isNullOrNullOrEmpty(type)) fieldToUpdate.type = type;
 
   try {
-    if(!isNullOrNullOrEmpty(req.files)){
-      let { file } = req.files
-      if(file.length > 1){
+    if (!isNullOrNullOrEmpty(req.files)) {
+      let { file } = req.files;
+      if (file.length > 1) {
         const imageData = await uploadMultipleImage(file);
-        await Ad.findByIdAndUpdate(id, { images: imageData }, { new: true })
-      }else{
+        await Ad.findByIdAndUpdate(id, { images: imageData }, { new: true });
+      } else {
         const imageData = await uploadSingleImage(file);
-        await Ad.findByIdAndUpdate(id, { images: imageData }, { new: true })
+        await Ad.findByIdAndUpdate(id, { images: imageData }, { new: true });
       }
     }
 
-    const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, { new: true })
+    const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, {
+      new: true,
+    });
     if (ad) {
       return successResponse(res, 200, "Ad update successfully.", true);
     } else {
@@ -436,7 +464,6 @@ const editAdMobile = async (req, res) => {
     return failedResponse(res, 500, "something went wrong.", false);
   }
 };
-
 
 const getSpecificAd = async (req, res) => {
   try {
@@ -783,19 +810,18 @@ const adRoomId = async (req, res) => {
   }
 };
 
-
 const returnTypesList = async (req, res) => {
   try {
-    return successResponse(res, 200, 'Post Ad list sent.', true, types_list);
+    return successResponse(res, 200, "Post Ad list sent.", true, types_list);
   } catch (error) {
-    return failedResponse(res, 500, 'Something went wrong.', false)
+    return failedResponse(res, 500, "Something went wrong.", false);
   }
-}
+};
 
 const returnData = async (req, res) => {
   const { type } = req.query;
   try {
-    if(type === "Autos"){
+    if (type === "Autos") {
       const autosList = {
         conditionList,
         gearBox,
@@ -803,37 +829,37 @@ const returnData = async (req, res) => {
         fuelType,
         kilometers,
         exteriorColor,
-        interiorColor
-      }
-      return successResponse(res, 200, 'Post Ad list sent.', true, autosList);
-    }else if(type === "Motorcycles"){
+        interiorColor,
+      };
+      return successResponse(res, 200, "Post Ad list sent.", true, autosList);
+    } else if (type === "Motorcycles") {
       const bussList = {
         conditionList,
         BikeFuelType,
         bikeBodyShape,
         kilometers,
-        bikeColor
-      }
-      return successResponse(res, 200, 'Post Ad list sent.', true, bussList);
-    }else if(type === "Busses"){
+        bikeColor,
+      };
+      return successResponse(res, 200, "Post Ad list sent.", true, bussList);
+    } else if (type === "Busses") {
       const bussList = {
         conditionList,
         axelType,
         kilometers,
-        fuelType
-      }
-      return successResponse(res, 200, 'Post Ad list sent.', true, bussList);
-    }else{
+        fuelType,
+      };
+      return successResponse(res, 200, "Post Ad list sent.", true, bussList);
+    } else {
       const commonData = {
         conditionList,
-        kilometers
-      }
-      return successResponse(res, 200, 'Post Ad list sent.', true, commonData);
+        kilometers,
+      };
+      return successResponse(res, 200, "Post Ad list sent.", true, commonData);
     }
   } catch (error) {
-    return failedResponse(res, 500, 'Something went wrong.', false)
+    return failedResponse(res, 500, "Something went wrong.", false);
   }
-}
+};
 
 export {
   fetchTopAds,
@@ -853,5 +879,5 @@ export {
   adRoomId,
   editAdMobile,
   returnTypesList,
-  returnData
+  returnData,
 };
