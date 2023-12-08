@@ -61,15 +61,6 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   const { firstName, lastName, email, userName, password, phoneNumber } = req.body;
-  const existingUser = await User.findOne({ email });
-  if (existingUser?.email) {
-    return failedResponse(
-      res,
-      400,
-      "Alert! email already exists please enter someother email.",
-      false
-    );
-  }
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser?.email) {
