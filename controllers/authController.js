@@ -11,6 +11,7 @@ import generateRandomCode from "../utils/generateRandomCode.js";
 import { sendEmailReset } from "../utils/passwordResetEmail.js";
 import OTP from "../models/OTPModel.js";
 import Ad from "../models/AdModel.js";
+import { sellAndRepairEmail } from "../utils/sellAndRepairEmail.js";
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -221,6 +222,33 @@ const sendEmail = async (req, res) => {
     description,
     phoneNo,
   } = req.body;
+
+  const { file } = req.files;
+      let image;
+      if (file.length > 1) {
+        image = await uploadMultipleImage(file);
+      } else {
+        image = await uploadSingleImage(file);
+      }
+      const email1 =  await sellAndRepairEmail(email, fullName, make, model, year, description, phoneNo, subject, image);
+      console.log(email1);
+      return successResponse(res, 200, "Email is sent successfully", true);
+
+  try {
+      const { file } = req.files;
+      let image;
+      if (file.length > 1) {
+        image = await uploadMultipleImage(file);
+      } else {
+        image = await uploadSingleImage(file);
+      }
+      const email =  await sellAndRepairEmail(email, fullName, make, model, year, description, phoneNumber, subject);
+      console.log(email);
+      return successResponse(res, 200, "Email is sent successfully", true);
+  } catch (error) {
+    return failedResponse(res, 400, "Email is not sent", false);
+  }
+
   if (req.files === undefined) {
     try {
       const sentEmail = await userEmail(subject, message, "", email);
