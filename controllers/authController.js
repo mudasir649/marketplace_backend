@@ -49,7 +49,10 @@ const login = async (req, res) => {
         400,
         "Account is registered but not verified",
         false,
-        token
+        {
+          token,
+          userDetails,
+        }
       );
     }
   } else {
@@ -525,5 +528,5 @@ export {
   resetPassword,
   verifyAccount,
   showAds,
-  showNumber
+  showNumber,
 };
