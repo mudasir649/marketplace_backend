@@ -412,15 +412,30 @@ const editAdMobile = async (req, res) => {
   if (!isNullOrNullOrEmpty(category)) fieldToUpdate.category = category;
   if (!isNullOrNullOrEmpty(subCategory))
     fieldToUpdate.subCategory = subCategory;
-  if (!isNullOrNullOrEmpty(price)) fieldToUpdate.price = price;
+  // if (!isNullOrNullOrEmpty(price)) fieldToUpdate.price = price;
   if (!isNullOrNullOrEmpty(condition)) fieldToUpdate.condition = condition;
   if (!isNullOrNullOrEmpty(brand)) fieldToUpdate.brand = brand;
   if (!isNullOrNullOrEmpty(videoUrl)) fieldToUpdate.videoUrl = videoUrl;
   if (!isNullOrNullOrEmpty(description))
     fieldToUpdate.description = description;
   if (!isNullOrNullOrEmpty(phone)) fieldToUpdate.phone = phone;
-  if (!isNullOrNullOrEmpty(whatsapp)) fieldToUpdate.whatsapp = whatsapp;
-  if (!isNullOrNullOrEmpty(viber)) fieldToUpdate.viber = viber;
+  if (!isNullOrNullOrEmpty(viber)) {
+    fieldToUpdate.viber = viber;
+  } else {
+    fieldToUpdate.viber = "";
+  }
+
+  if (!isNullOrNullOrEmpty(whatsapp)) {
+    fieldToUpdate.whatsapp = whatsapp;
+  } else {
+    fieldToUpdate.whatsapp = "";
+  }
+
+  if (!isNullOrNullOrEmpty(price)) {
+    fieldToUpdate.price = price;
+  } else {
+    fieldToUpdate.price = "";
+  }
   if (!isNullOrNullOrEmpty(model)) fieldToUpdate.model = model;
   if (!isNullOrNullOrEmpty(year)) fieldToUpdate.year = year;
   if (!isNullOrNullOrEmpty(km)) fieldToUpdate.km = km;
