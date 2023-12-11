@@ -4,7 +4,9 @@ import path from "path";
 
 export async function sellAndRepairEmail(email, fullName, make, model, year, description, phoneNumber, subject, image){
 
-    console.log(subject);
+    console.log("subject", subject);
+    console.log(image[0]);
+    console.log(image[1]);
 
     const transport = nodemailer.createTransport({
         host: 'smtp-relay.brevo.com',
@@ -19,7 +21,7 @@ export async function sellAndRepairEmail(email, fullName, make, model, year, des
     const handlebarOptions = {
         viewEngine: {
             extName: '.handlebars',
-            defaultlayout: false
+            defaultLayout: false
         },
         viewPath: path.resolve('./views'),
         extname: 'handlebars'
