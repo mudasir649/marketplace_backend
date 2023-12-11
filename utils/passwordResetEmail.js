@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import path, { extname } from "path";
 import hbs from 'nodemailer-express-handlebars';
 
-export async function sendEmailReset(email, subject, text, code) {
+export async function sendEmailReset(email, subject, text1, text2, code) {
     
     const transport = nodemailer.createTransport({
         host: 'smtp-relay.brevo.com',
@@ -32,7 +32,8 @@ export async function sendEmailReset(email, subject, text, code) {
         subject,
         template: 'email',
         context: {
-            text: text,
+            text1: text1,
+            text2: text2,
             code: code
         }
     }

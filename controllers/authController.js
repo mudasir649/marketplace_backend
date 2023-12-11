@@ -48,7 +48,7 @@ const login = async (req, res) => {
         res,
         400,
         "Account is registered but not verified",
-        false,
+        true,
         {
           token,
           userDetails,
@@ -96,7 +96,7 @@ const register = async (req, res) => {
         res
       );
       await OTP.create({ resetCode, token });
-      await sendEmailReset(email, "This is email for reset.", resetCode);
+      await sendEmailReset(email, "This is email for verify account.", "Verify your account", "Enter the following code to verify your account.", resetCode);
       return successResponse(res, 201, "user created successfully.", true, {
         token,
         userDetails,
@@ -328,6 +328,41 @@ const changePassword = async (req, res) => {
   }
 };
 
+const resendVerifyCode  = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if(!user){
+      return failedResponse(
+        res,
+        400,
+        "Provided email is not registered. Please! enter valid email",
+        false
+      );
+    }else{
+      const resetCode = await generateRandomCode();
+        const token = await generateToken(
+          user._id,
+          user?.email,
+          user?.userName,
+          req,
+          res
+        );
+        await OTP.create({ resetCode, token });
+        await sendEmailReset(email, "This is email for verify account.", "Verify your password", "Enter the following code to verify your account.", resetCode);
+        return successResponse(
+          res,
+          200,
+          "email is sent successfully",
+          true,
+          token
+        );
+    }
+  } catch (error) {
+    return failedResponse(res, 500, "something went wrong.", false);
+  }
+}
+
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
@@ -348,8 +383,8 @@ const forgotPassword = async (req, res) => {
         req,
         res
       );
-      const resetModel = await OTP.create({ resetCode, token });
-      await sendEmailReset(email, "This is email for reset.", 'Copy the password to reset password', resetCode);
+      await OTP.create({ resetCode, token });
+      await sendEmailReset(email, "This is email for reset.", "Reset your password", "Enter the following code to reset password", resetCode);
       return successResponse(
         res,
         200,
@@ -529,4 +564,5 @@ export {
   verifyAccount,
   showAds,
   showNumber,
+  resendVerifyCode,
 };
