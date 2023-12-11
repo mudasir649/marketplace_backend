@@ -16,7 +16,8 @@ import {
   resetPassword,
   verifyAccount,
   showAds,
-  showNumber
+  showNumber,
+  resendVerifyCode
 } from "../controllers/authController.js";
 import { changePasswordValidate, protect, validateRegister } from "../middleware/authMiddleware.js";
 const router = express.Router();
@@ -34,6 +35,7 @@ router
   .post("/send-email", sendEmail)
   .post("/change-password/:userId", changePasswordValidate, changePassword)
   .post("/forgot-password", forgotPassword)
+  .post("/resend-code",  resendVerifyCode)
   .get("/checkToken", checkToken).
   get("/verify-code/:code", verifyCode).
   post("/reset-password", resetPassword).
