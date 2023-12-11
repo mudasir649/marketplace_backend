@@ -43,7 +43,7 @@ const login = async (req, res) => {
         res
       );
       await OTP.create({ resetCode, token });
-      await sendEmailReset(email, "This is email for reset.", 'This is the code to verify you account', resetCode);
+      await sendEmailReset(email, "This is email for verify account.", "Verify your account", "Enter the following code to verify your account.", resetCode);
       return successResponse(
         res,
         400,
