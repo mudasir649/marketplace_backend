@@ -1,69 +1,69 @@
 export const types_list = [
     {
         name: "Autos",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257529/pic3_asgavk.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/electric-car_ni5gwt.png",
         subCategories: [""]
     },
     {
         name: "Bikes",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pci9_qjg7fd.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/bycicle_1_ase8ob.png",
         subCategories: [
             {
                 name:'Bicycles',
-                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/bicycle_cj7jva.png'
+                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357248/bicycle_rpjcit.png'
             },
             {
                 name:'E-scooters',
-                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/electric-bicycle_s9gjl8.png'
+                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/kick-scooter_olxyde.png'
             },
             {
                 name: 'E-bikes', 
-                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/kick-scooter_tmgy2n.png'
+                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/electric-bicycle_onzofz.png'
             },
             {
                 name: 'Motorcycles',
-                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701329683/motorcycle_wy4hrk.png'
+                image: 'https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357248/motorcycle_guao2f.png'
             }
         ]
     },
     {
         name: "Boats",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic1_kpxx5e.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357248/boat_o6xauf.png",
         subCategories: [""]
     },
     {
         name: "Busses",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic2_fjlqqt.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357248/bus_gtxmhp.png",
         subCategories: [""]
     },
     {
         name: "Drones",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257531/pic5_i7uwpf.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/drone_3_p9yppv.png",
         subCategories: [""]
     },
     {
         name: "Trailers",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257532/pic6_jcejhj.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/trailer_hhy9po.png",
         subCategories: [""]
     },
     {
         name: "Trucks",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257531/pic4_a7imhy.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/delivery-truck_r8jqpr.png",
         subCategories: [""]
     },
     {
         name: "Construction Machines",
-        image: "https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257532/pic7_kecdjc.png",
+        image: "https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/excavator_scv4o1.png",
         subCategories: [""]
     },
     {
         name: "Vans",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701258110/pic11_w6b4j1.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357249/van_zyuryo.png",
         subCategories: [""]
     },
     {
         name: "Parts",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic10_xu1h7k.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357248/spare-parts_qrpyzu.png",
         subCategories: [
             {
                 name:"Auto",
@@ -109,7 +109,7 @@ export const types_list = [
     },
     {
         name: "Others",
-        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1701257528/pic8_zamwf9.png",
+        image:"https://res.cloudinary.com/dlkuyfwzu/image/upload/v1702357248/more_pveww7.png",
         subCategories: [""]
     }
 ];
