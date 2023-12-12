@@ -121,9 +121,11 @@ const fetchAllAds = async (req, res) => {
 
     console.log(sortBy);
     console.log(query);
+    console.log(sortOptions);
 
     const ad = await Ad.find(query)
       .sort(sortOptions)
+      .collation({ locale: 'en', strength: 2 })
       .skip(skip)
       .limit(10)
       .populate("userId");
