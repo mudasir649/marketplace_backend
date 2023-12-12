@@ -234,7 +234,6 @@ const sendEmail = async (req, res) => {
         image = await uploadSingleImage(file);
       }
       const email1 =  await sellAndRepairEmail(email, fullName, make, model, year, description, phoneNo, subject, image);
-      console.log(email1);
       return successResponse(res, 200, "Email is sent successfully", true);
 
   try {
@@ -476,7 +475,6 @@ const verifyAccount = async (req, res) => {
       user.verified = true;
       await user.save();
       if (user.verified === true) {
-        console.log(user);
         const token = await generateToken(
           user?._id,
           user?.email,

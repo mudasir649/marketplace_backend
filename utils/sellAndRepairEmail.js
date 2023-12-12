@@ -4,10 +4,6 @@ import path from "path";
 
 export async function sellAndRepairEmail(email, fullName, make, model, year, description, phoneNumber, subject, image){
 
-    console.log("subject", subject);
-    console.log(image[0]);
-    console.log(image[1]);
-
     const transport = nodemailer.createTransport({
         host: 'smtp-relay.brevo.com',
         port: 587,
