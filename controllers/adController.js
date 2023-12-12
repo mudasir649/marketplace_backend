@@ -155,8 +155,8 @@ const fetchFeaturedAds = async (req, res) => {
 };
 
 const createAd = async (req, res) => {
-  const { file } = req.files;
   try {
+  const { file } = req.files;
     if (file.length > 1) {
       const data = req.body;
       const imageData = await uploadMultipleImage(file);
