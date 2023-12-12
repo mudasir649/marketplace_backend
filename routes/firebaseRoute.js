@@ -44,7 +44,6 @@ router.post('/', async(req, res) => {
         }
 
         const ad = await Ad.findByIdAndUpdate(productId, {$push: {chatIds: chatroomId }}, { new: true });
-        console.log(ad);
         return successResponse(res, 200, 'chat room created successfully.', true, chatroomId);
         res.send({ chatroomId });
     } catch (error) {

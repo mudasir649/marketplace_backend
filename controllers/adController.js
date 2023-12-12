@@ -356,8 +356,6 @@ const editAd = async (req, res) => {
       fieldToUpdate.images = images;
     }
 
-    console.log(fieldToUpdate.images);
-
     const ad = await Ad.findByIdAndUpdate({ _id: id }, fieldToUpdate, {
       new: true,
     });
@@ -553,7 +551,7 @@ const toggleFavorite = async (req, res) => {
 
 const findModels = async (req, res) => {
   const { type, make } = req.params;
-  console.log(req.params);
+
   if (type == "Autos") {
     const cars = await Cars.find({ make: make })
       .select("model")
