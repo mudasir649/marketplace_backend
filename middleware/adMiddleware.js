@@ -23,7 +23,7 @@ export const validateRequestBody = (req, res, next) => {
       body("category").isString(),
       body("userId").isMongoId(), // Assuming userId is a MongoDB ObjectId
       body("title").isString(),
-      body("price").isNumeric(),
+      body("price").isNumeric().optional(),
       body("brand").isString(),
       body("model").isString(),
       body("description").isString(),
@@ -52,7 +52,7 @@ export const validateRequestBody = (req, res, next) => {
       body("subCategory").isString(),
       body("userId").isMongoId(), // Assuming userId is a MongoDB ObjectId
       body("title").isString(),
-      body("price").isNumeric(),
+      body("price").isNumeric().optional(),
       body("brand").isString(),
       body("model").isString(),
       body("description").isString(),
@@ -80,7 +80,7 @@ export const validateRequestBody = (req, res, next) => {
       body("category").isString(),
       body("userId").isMongoId(), // Assuming userId is a MongoDB ObjectId
       body("title").isString(),
-      body("price").isNumeric(),
+      body("price").isNumeric().optional(),
       body("brand").isString(),
       body("model").isString(),
       body("description").isString(),
@@ -102,7 +102,7 @@ export const validateRequestBody = (req, res, next) => {
       body("category").isString(),
       body("userId").isMongoId(), // Assuming userId is a MongoDB ObjectId
       body("title").isString(),
-      body("price").isNumeric(),
+      body("price").isNumeric().optional(),
       body("brand").isString(),
       body("model").isString(),
       body("description").isString(),
@@ -128,7 +128,7 @@ export const validateRequestBody = (req, res, next) => {
       body("category").isString(),
       body("userId").isMongoId(), // Assuming userId is a MongoDB ObjectId
       body("title").isString(),
-      body("price").isNumeric(),
+      body("price").isNumeric().optional(),
       body("brand").isString(),
       body("model").isString(),
       body("description").isString(),
@@ -154,7 +154,7 @@ export const validateRequestBody = (req, res, next) => {
       body("category").isString(),
       body("userId").isMongoId(), // Assuming userId is a MongoDB ObjectId
       body("title").isString(),
-      body("price").isNumeric(),
+      body("price").isNumeric().optional(),
       body("brand").isString(),
       body("model").isString(),
       body("description").isString(),
@@ -177,7 +177,7 @@ export const validateRequestBody = (req, res, next) => {
       body("category").isString(),
       body("userId").isMongoId(), // Assuming userId is a MongoDB ObjectId
       body("title").isString(),
-      body("price").isNumeric(),
+      body("price").isNumeric().optional(),
       body("brand").isString(),
       body("model").isString(),
       body("description").isString(),
@@ -201,7 +201,7 @@ export const validateRequestBody = (req, res, next) => {
       body("subCategory").isString(),
       body("userId").isMongoId(), // Assuming userId is a MongoDB ObjectId
       body("title").isString(),
-      body("price").isNumeric(),
+      body("price").isNumeric().optional(),
       body("description").isString(),
       body("videoUrl").isString(),
       body("address").isString(),
