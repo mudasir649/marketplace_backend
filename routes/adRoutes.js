@@ -27,7 +27,7 @@ router
   .get("/", fetchAllAds)
   .get("/fetchFeatured", fetchFeaturedAds)
   .get("/fetchTopAds", fetchTopAds)
-  .post("/adPost", validateRequestBody, createAd)
+  .post("/adPost", createAd)
   .get("/get-types-list", returnTypesList)
   .get("/get-postAd-data", returnData)
   .patch("/edit-ad/:id", editAd)

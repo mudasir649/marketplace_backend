@@ -166,7 +166,6 @@ export const validateRequestBody = (req, res, next) => {
       body("whatsapp").isString().optional(),
       body("viber").isString().optional(),
       body("year").isNumeric(),
-      body("km").isString(), // You may need custom validation for this field
       body("latitude").isNumeric().optional(),
       body("longitude").isNumeric().optional(),
     ];
