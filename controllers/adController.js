@@ -787,7 +787,7 @@ const refreshAd = async (req, res) => {
     const timeDifference = new Date() - existingAd.createdAt;
     const secondsDifference = timeDifference / 1000;
 
-    if (secondsDifference > 15) {
+    if (secondsDifference > 10800) {
       const deleteAd = await Ad.findByIdAndDelete(id);
 
       if (!deleteAd) {
