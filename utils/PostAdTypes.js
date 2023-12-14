@@ -192,91 +192,21 @@ export const fuelType = [
   ];
   
   export const bikeBodyShape = [
-    {
-      name: "Supersport",
-      value: "Supersport",
-    },
-    {
-      name: "Sport Touring",
-      value: "Sport Touring",
-    },
-    {
-      name: "Chopper/Cruiser",
-      value: "Chopper/Cruiser",
-    },
-    {
-      name: "Touring Enduro",
-      value: "Touring Enduro",
-    },
-    {
-      name: "Streetfighter",
-      value: "Streetfighter",
-    },
-    {
-      name: "Enduro Bike",
-      value: "Enduro Bike",
-    },
-    {
-      name: "Motocrosser",
-      value: "Motocrosser",
-    },
-    {
-      name: "Sidecar",
-      value: "Sidecar",
-    },
-    {
-      name: "Classic",
-      value: "Classic",
-    },
-    {
-      name: "Three Wheeler",
-      value: "Three Wheeler",
-    },
-    {
-      name: "Scooter",
-      value: "Scooter",
-    },
-    {
-      name: "Moped",
-      value: "Moped",
-    },
-    {
-      name: "Super Moto",
-      value: "Super Moto",
-    },
-    {
-      name: "Minibike",
-      value: "Minibike",
-    },
-    {
-      name: "Naked Bike",
-      value: "Naked Bike",
-    },
-    {
-      name: "Quad",
-      value: "Quad",
-    },
-    {
-      name: "Rally",
-      value: "Rally",
-    },
-    {
-      name: "Trials Bike",
-      value: "Trials Bike",
-    },
-    {
-      name: "Racing",
-      value: "Racing",
-    },
-    {
-      name: "Tourer",
-      value: "Tourer",
-    },
-    {
-      name: "Other",
-      value: "Other",
-    },
-  ];
+      {name: "ATV / Quad", value: "ATV / Quad"},
+      {name: "Cabin", value: "Cabin"},
+      {name: "Chopper", value: "Chopper"},
+      {name: "Enduro", value: "Enduro"},
+      {name: "Moped", value: "Moped"},
+      {name: "Motocross", value: "Motocross"},
+      {name: "Naked Bike", value: "Naked Bike"},
+      {name: "Scooter", value: "Scooter"},
+      {name: "Sidecar", value: "Sidecar"},
+      {name: "Street", value: "Street"},
+      {name: "Supermoto", value: "Supermoto"},
+      {name: "Touring", value: "Touring"},
+      {name: "Trike", value: "Trike"},
+      {name: "Others", value: "Others"}
+    ];
   
   export const BikeFuelType = [
     {
