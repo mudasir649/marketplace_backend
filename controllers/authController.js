@@ -17,54 +17,61 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email }).select("password");
-  if (user && (await bcrypt.compare(password, user.password))) {
-    // userDetails variable is created because in this variable it will store all values of
-    // user except password and returned to the user
-    const userDetails = await User.findOne({ email });
-    if (userDetails.verified === true) {
-      const token = await generateToken(
-        user?._id,
-        user?.email,
-        user?.userName,
-        req,
-        res
-      );
-      return successResponse(res, 200, "You are loggedin.", true, {
-        token,
-        userDetails,
-      });
-    } else {
-      const resetCode = await generateRandomCode();
-      const token = await generateToken(
-        userDetails?._id,
-        userDetails?.email,
-        userDetails?.userName,
-        req,
-        res
-      );
-      await OTP.create({ resetCode, token });
-      await sendEmailReset(email, "This is email for verify account.", "Verify your account", "Enter the following code to verify your account.", resetCode);
-      return successResponse(
-        res,
-        400,
-        "Account is registered but not verified",
-        true,
-        {
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // userDetails variable is created because in this variable it will store all values of
+      // user except password and returned to the user
+      const userDetails = await User.findOne({ email });
+      if (userDetails.verified === true) {
+        const token = await generateToken(
+          user?._id,
+          user?.email,
+          user?.userName,
+          req,
+          res
+        );
+        return successResponse(res, 200, "You are loggedin.", true, {
           token,
           userDetails,
-        }
-      );
+        });
+      } else {
+        const resetCode = await generateRandomCode();
+        const token = await generateToken(
+          userDetails?._id,
+          userDetails?.email,
+          userDetails?.userName,
+          req,
+          res
+        );
+        await OTP.create({ resetCode, token });
+        await sendEmailReset(
+          email,
+          "This is email for verify account.",
+          "Verify your account",
+          "Enter the following code to verify your account.",
+          resetCode
+        );
+        return successResponse(
+          res,
+          400,
+          "Account is registered but not verified",
+          true,
+          {
+            token,
+            userDetails,
+          }
+        );
+      }
+    } else {
+      return failedResponse(res, 401, "Invalid email or password.", false);
     }
-  } else {
-    return failedResponse(res, 401, "Invalid email or password.", false);
-  }
   } catch (error) {
     return failedResponse(res, 500, "Something went wrong.", false);
   }
 };
 
 const register = async (req, res) => {
-  const { firstName, lastName, email, userName, password, phoneNumber } = req.body;
+  const { firstName, lastName, email, userName, password, phoneNumber } =
+    req.body;
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser?.email) {
@@ -96,7 +103,13 @@ const register = async (req, res) => {
         res
       );
       await OTP.create({ resetCode, token });
-      await sendEmailReset(email, "This is email for verify account.", "Verify your account", "Enter the following code to verify your account.", resetCode);
+      await sendEmailReset(
+        email,
+        "This is email for verify account.",
+        "Verify your account",
+        "Enter the following code to verify your account.",
+        resetCode
+      );
       return successResponse(res, 201, "user created successfully.", true, {
         token,
         userDetails,
@@ -188,8 +201,8 @@ const updateProfile = async (req, res) => {
     if (!isNullOrNullOrEmpty(firstName)) updates.firstName = firstName;
     if (!isNullOrNullOrEmpty(lastName)) updates.lastName = lastName;
     if (!isNullOrNullOrEmpty(phoneNumber)) updates.phoneNumber = phoneNumber;
-    if (!isNullOrNullOrEmpty(whatsapp)) updates.whatsapp = whatsapp;
-    if (!isNullOrNullOrEmpty(viber)) updates.viber = viber;
+    updates.whatsapp = whatsapp;
+    updates.viber = viber;
 
     if (req.files) {
       const image = await uploadSingleImage(req.files.file);
@@ -227,26 +240,45 @@ const sendEmail = async (req, res) => {
   } = req.body;
 
   const { file } = req.files;
-      let image;
-      if (file.length > 1) {
-        image = await uploadMultipleImage(file);
-      } else {
-        image = await uploadSingleImage(file);
-      }
-      const email1 =  await sellAndRepairEmail(email, fullName, make, model, year, description, phoneNo, subject, image);
-      return successResponse(res, 200, "Email is sent successfully", true);
+  let image;
+  if (file.length > 1) {
+    image = await uploadMultipleImage(file);
+  } else {
+    image = await uploadSingleImage(file);
+  }
+  const email1 = await sellAndRepairEmail(
+    email,
+    fullName,
+    make,
+    model,
+    year,
+    description,
+    phoneNo,
+    subject,
+    image
+  );
+  return successResponse(res, 200, "Email is sent successfully", true);
 
   try {
-      const { file } = req.files;
-      let image;
-      if (file.length > 1) {
-        image = await uploadMultipleImage(file);
-      } else {
-        image = await uploadSingleImage(file);
-      }
-      const email =  await sellAndRepairEmail(email, fullName, make, model, year, description, phoneNumber, subject);
-      console.log(email);
-      return successResponse(res, 200, "Email is sent successfully", true);
+    const { file } = req.files;
+    let image;
+    if (file.length > 1) {
+      image = await uploadMultipleImage(file);
+    } else {
+      image = await uploadSingleImage(file);
+    }
+    const email = await sellAndRepairEmail(
+      email,
+      fullName,
+      make,
+      model,
+      year,
+      description,
+      phoneNumber,
+      subject
+    );
+    console.log(email);
+    return successResponse(res, 200, "Email is sent successfully", true);
   } catch (error) {
     return failedResponse(res, 400, "Email is not sent", false);
   }
@@ -327,40 +359,46 @@ const changePassword = async (req, res) => {
   }
 };
 
-const resendVerifyCode  = async (req, res) => {
+const resendVerifyCode = async (req, res) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
-    if(!user){
+    if (!user) {
       return failedResponse(
         res,
         400,
         "Provided email is not registered. Please! enter valid email",
         false
       );
-    }else{
+    } else {
       const resetCode = await generateRandomCode();
-        const token = await generateToken(
-          user._id,
-          user?.email,
-          user?.userName,
-          req,
-          res
-        );
-        await OTP.create({ resetCode, token });
-        await sendEmailReset(email, "This is email for verify account.", "Verify your password", "Enter the following code to verify your account.", resetCode);
-        return successResponse(
-          res,
-          200,
-          "email is sent successfully",
-          true,
-          token
-        );
+      const token = await generateToken(
+        user._id,
+        user?.email,
+        user?.userName,
+        req,
+        res
+      );
+      await OTP.create({ resetCode, token });
+      await sendEmailReset(
+        email,
+        "This is email for verify account.",
+        "Verify your password",
+        "Enter the following code to verify your account.",
+        resetCode
+      );
+      return successResponse(
+        res,
+        200,
+        "email is sent successfully",
+        true,
+        token
+      );
     }
   } catch (error) {
     return failedResponse(res, 500, "something went wrong.", false);
   }
-}
+};
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -383,7 +421,13 @@ const forgotPassword = async (req, res) => {
         res
       );
       await OTP.create({ resetCode, token });
-      await sendEmailReset(email, "This is email for reset.", "Reset your password", "Enter the following code to reset password", resetCode);
+      await sendEmailReset(
+        email,
+        "This is email for reset.",
+        "Reset your password",
+        "Enter the following code to reset password",
+        resetCode
+      );
       return successResponse(
         res,
         200,
